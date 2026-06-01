@@ -82,6 +82,7 @@ h1, h2, h3, .hero h2 { margin: 0 0 0.5rem; }
 .detail-image { margin: 0 0 1rem; }
 .detail-image img { border: 1px solid #c8d0cc; }
 .sidebar-list { margin: 0; padding-left: 1.1rem; }
+.pagination ol { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; list-style: none; }
 
 @media (max-width: 760px) {
   .layout,

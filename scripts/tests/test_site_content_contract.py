@@ -15,7 +15,7 @@ class SiteContentContractTests(unittest.TestCase):
     def test_launch_slice_has_structured_fictional_location_corpus(self) -> None:
         locations = self.load_locations()
 
-        self.assertGreaterEqual(len(locations), 12)
+        self.assertGreaterEqual(len(locations), 60)
         slugs = [str(location["slug"]) for location in locations]
         self.assertEqual(len(slugs), len(set(slugs)))
 
@@ -31,6 +31,17 @@ class SiteContentContractTests(unittest.TestCase):
                 self.assertTrue(str(location.get("image", "")).endswith(".png"))
                 self.assertNotIn("Google Maps", json.dumps(location))
                 self.assertNotIn("Bing Maps", json.dumps(location))
+
+    def test_launch_corpus_has_enough_category_depth_for_browsing(self) -> None:
+        locations = self.load_locations()
+        category_counts: dict[str, int] = {}
+        for location in locations:
+            category = str(location["category"])
+            category_counts[category] = category_counts.get(category, 0) + 1
+
+        self.assertGreaterEqual(len(category_counts), 10)
+        self.assertGreaterEqual(max(category_counts.values()), 6)
+        self.assertGreaterEqual(sum(1 for count in category_counts.values() if count >= 4), 8)
 
     def test_every_location_image_exists_as_png_with_provenance(self) -> None:
         locations = self.load_locations()

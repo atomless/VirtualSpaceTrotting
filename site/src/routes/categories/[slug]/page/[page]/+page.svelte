@@ -8,7 +8,7 @@
 
 <div class="layout">
   <section aria-labelledby="category-title">
-    <h1 id="category-title">{data.category.title}</h1>
+    <h1 id="category-title">{data.category.title}: Page {data.page.currentPage}</h1>
     <p>
       {data.category.count} fictional generated maps in this category. Page {data.page.currentPage} of {data.page.totalPages}.
     </p>

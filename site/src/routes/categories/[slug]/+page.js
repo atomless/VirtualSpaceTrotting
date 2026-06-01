@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { categories, getCategory, getLocationsByCategory } from '$lib/data/locations.js';
+import { categories, getCategory, getLocationsByCategoryPage } from '$lib/data/locations.js';
 
 export const prerender = true;
 
@@ -10,8 +10,10 @@ export function entries() {
 export function load({ params }) {
   const category = getCategory(params.slug);
   if (!category) error(404, 'Imaginary category not found');
+  const page = getLocationsByCategoryPage(params.slug, 1);
   return {
     category,
-    locations: getLocationsByCategory(params.slug)
+    locations: page.items,
+    page
   };
 }

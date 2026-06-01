@@ -39,7 +39,7 @@ make remote-update
 
 ## Content Notes
 
-The current launch seed is 12 fictional locations spread across transport, observatory, civic, garden, waterfront, residential, industrial, monument, sport, and agricultural categories. Images are procedural previews so the site can be built and reviewed without external API credentials. Replace them with a larger AI-generated satellite-like batch before a public launch once `OPENAI_API_KEY` is available.
+The current launch seed is 64 fictional locations across 11 categories. The map index paginates at 12 locations per page, and category pages paginate once a category has enough depth. Images are procedural generated previews so the site can be built and reviewed without extra API credentials.
 
 ## Deployment Notes
 

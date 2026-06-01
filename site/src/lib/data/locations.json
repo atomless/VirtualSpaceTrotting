@@ -11,7 +11,11 @@
     "image": "/assets/locations/asterfall-ring-terminal.png",
     "summary": "A circular transit interchange cut into pale desert flats, with radial service roads and a dry reservoir apron.",
     "description": "The Ring Terminal appears from above like a compass rose pressed into salt and stone. The outer track is imaginary, the roads lead nowhere real, and the whole place exists only as a generated satellite-style scene.",
-    "tags": ["terminal", "desert", "radial"]
+    "tags": [
+      "terminal",
+      "desert",
+      "radial"
+    ]
   },
   {
     "slug": "lumen-salt-observatory",
@@ -25,7 +29,11 @@
     "image": "/assets/locations/lumen-salt-observatory.png",
     "summary": "A scatter of telescope pads and maintenance lanes on a bright mineral plain.",
     "description": "This generated observatory is arranged for the pleasure of the overhead view: small domes, rectangular sheds, and service lines placed against an unreal salt-pan landscape.",
-    "tags": ["observatory", "salt flat", "science"]
+    "tags": [
+      "observatory",
+      "salt flat",
+      "science"
+    ]
   },
   {
     "slug": "myrwatch-amphitheatre",
@@ -39,7 +47,11 @@
     "image": "/assets/locations/myrwatch-amphitheatre.png",
     "summary": "A stepped oval venue set beside dark groves and a half-moon service court.",
     "description": "Myrwatch is a fictional performance site whose tiers and paths are exaggerated for satellite browsing. No concerts, tickets, or roads here are real.",
-    "tags": ["amphitheatre", "venue", "uplands"]
+    "tags": [
+      "amphitheatre",
+      "venue",
+      "uplands"
+    ]
   },
   {
     "slug": "verdant-array-gardens",
@@ -53,7 +65,11 @@
     "image": "/assets/locations/verdant-array-gardens.png",
     "summary": "An ordered field of planted bands, mirror ponds, and angular walking paths.",
     "description": "The gardens are a generated land-art pattern: too neat to be found, too plausible to ignore, and explicitly part of the imaginary atlas.",
-    "tags": ["gardens", "land art", "coast"]
+    "tags": [
+      "gardens",
+      "land art",
+      "coast"
+    ]
   },
   {
     "slug": "sable-canal-locks",
@@ -67,7 +83,11 @@
     "image": "/assets/locations/sable-canal-locks.png",
     "summary": "A stepped canal system with dark basins, service roads, and narrow maintenance islands.",
     "description": "These locks are fictional infrastructure made for slow looking: gates, basins, and access roads aligned into an invented hydraulic puzzle.",
-    "tags": ["canal", "locks", "water"]
+    "tags": [
+      "canal",
+      "locks",
+      "water"
+    ]
   },
   {
     "slug": "nacre-dome-quarter",
@@ -81,7 +101,11 @@
     "image": "/assets/locations/nacre-dome-quarter.png",
     "summary": "A compact cluster of domed roofs and courtyards on an invented wetland edge.",
     "description": "The quarter suggests civic buildings, markets, and enclosed gardens, but the place is generated fiction with no real city beneath it.",
-    "tags": ["domes", "quarter", "wetland"]
+    "tags": [
+      "domes",
+      "quarter",
+      "wetland"
+    ]
   },
   {
     "slug": "glass-fen-causeway",
@@ -95,7 +119,11 @@
     "image": "/assets/locations/glass-fen-causeway.png",
     "summary": "A long raised road crossing reflective marsh cells and abandoned-looking platforms.",
     "description": "This causeway is an imaginary crossing built from generated geometry, wetland colors, and a deliberately readable overhead silhouette.",
-    "tags": ["causeway", "marsh", "road"]
+    "tags": [
+      "causeway",
+      "marsh",
+      "road"
+    ]
   },
   {
     "slug": "red-meridian-relay",
@@ -109,7 +137,11 @@
     "image": "/assets/locations/red-meridian-relay.png",
     "summary": "A remote relay compound with red service tracks, antenna pads, and a triangular perimeter lane.",
     "description": "The Relay is fictional infrastructure, not a real communications site. It is designed to have the satisfying geometry of an overhead map curiosity.",
-    "tags": ["relay", "compound", "plain"]
+    "tags": [
+      "relay",
+      "compound",
+      "plain"
+    ]
   },
   {
     "slug": "cobalt-shoal-drydock",
@@ -123,7 +155,11 @@
     "image": "/assets/locations/cobalt-shoal-drydock.png",
     "summary": "A blue-water drydock complex with spare hull outlines and salt-stained service yards.",
     "description": "Cobalt Shoal Drydock is a generated maritime scene. The slips, hulls, and cranes are invented marks in a synthetic coastal image.",
-    "tags": ["drydock", "coast", "maritime"]
+    "tags": [
+      "drydock",
+      "coast",
+      "maritime"
+    ]
   },
   {
     "slug": "auric-step-pyramid",
@@ -137,7 +173,11 @@
     "image": "/assets/locations/auric-step-pyramid.png",
     "summary": "A terraced pyramid form with processional tracks and square excavation scars.",
     "description": "This pyramid is not an archaeological claim. It is a fictional landform generated to evoke the thrill of spotting ancient geometry from orbit.",
-    "tags": ["pyramid", "plateau", "ancient"]
+    "tags": [
+      "pyramid",
+      "plateau",
+      "ancient"
+    ]
   },
   {
     "slug": "night-orchard-stadium",
@@ -151,7 +191,11 @@
     "image": "/assets/locations/night-orchard-stadium.png",
     "summary": "A stadium bowl tucked into gridded orchards, with training fields and a service crescent.",
     "description": "The stadium is an invented sports complex whose fields and parking lanes are tuned for recognisable overhead browsing.",
-    "tags": ["stadium", "orchards", "sports"]
+    "tags": [
+      "stadium",
+      "orchards",
+      "sports"
+    ]
   },
   {
     "slug": "pale-river-spiral-farms",
@@ -165,6 +209,946 @@
     "image": "/assets/locations/pale-river-spiral-farms.png",
     "summary": "A spiral irrigation pattern braided against a pale river channel and rectangular field blocks.",
     "description": "These farms are generated, not surveyed. The spiral is a visual device for an imaginary agricultural landscape.",
-    "tags": ["farms", "river", "spiral"]
+    "tags": [
+      "farms",
+      "river",
+      "spiral"
+    ]
+  },
+  {
+    "slug": "nacre-loop-terminal",
+    "title": "Nacre Loop Terminal",
+    "fictional": true,
+    "category": "Transport",
+    "region": "North Marrow Shelf",
+    "syntheticCoordinates": "S28.04 / E154.25",
+    "dateAdded": "2026-05-19",
+    "views": 760,
+    "image": "/assets/locations/nacre-loop-terminal.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Nacre Loop Terminal is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the loop terminal reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "pale-switchyard",
+    "title": "Pale Switchyard",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Grey Fen Expanse",
+    "syntheticCoordinates": "N35.35 / E165.42",
+    "dateAdded": "2026-05-18",
+    "views": 749,
+    "image": "/assets/locations/pale-switchyard.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Pale Switchyard is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the switchyard reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "red-viaduct",
+    "title": "Red Viaduct",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Cinderplain",
+    "syntheticCoordinates": "S42.66 / W016.59",
+    "dateAdded": "2026-05-17",
+    "views": 738,
+    "image": "/assets/locations/red-viaduct.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Red Viaduct is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the viaduct reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "tern-transit-fan",
+    "title": "Tern Transit Fan",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Alta Reed Flats",
+    "syntheticCoordinates": "N49.98 / E027.77",
+    "dateAdded": "2026-05-16",
+    "views": 727,
+    "image": "/assets/locations/tern-transit-fan.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Tern Transit Fan is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the transit fan reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "verdant-signal-yard",
+    "title": "Verdant Signal Yard",
+    "fictional": true,
+    "category": "Transport",
+    "region": "North Marrow Shelf",
+    "syntheticCoordinates": "S57.29 / E038.94",
+    "dateAdded": "2026-05-15",
+    "views": 716,
+    "image": "/assets/locations/verdant-signal-yard.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Verdant Signal Yard is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the signal yard reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "yarrow-rail-basin",
+    "title": "Yarrow Rail Basin",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Grey Fen Expanse",
+    "syntheticCoordinates": "N64.60 / W050.11",
+    "dateAdded": "2026-05-14",
+    "views": 705,
+    "image": "/assets/locations/yarrow-rail-basin.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Yarrow Rail Basin is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the rail basin reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "brindle-loop-terminal",
+    "title": "Brindle Loop Terminal",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Cinderplain",
+    "syntheticCoordinates": "S71.91 / E061.29",
+    "dateAdded": "2026-05-13",
+    "views": 694,
+    "image": "/assets/locations/brindle-loop-terminal.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Brindle Loop Terminal is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the loop terminal reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "dawn-switchyard",
+    "title": "Dawn Switchyard",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Alta Reed Flats",
+    "syntheticCoordinates": "N08.22 / E072.46",
+    "dateAdded": "2026-05-12",
+    "views": 683,
+    "image": "/assets/locations/dawn-switchyard.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Dawn Switchyard is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the switchyard reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "fallow-viaduct",
+    "title": "Fallow Viaduct",
+    "fictional": true,
+    "category": "Transport",
+    "region": "North Marrow Shelf",
+    "syntheticCoordinates": "S15.53 / W083.63",
+    "dateAdded": "2026-05-11",
+    "views": 672,
+    "image": "/assets/locations/fallow-viaduct.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Fallow Viaduct is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the viaduct reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "hollow-transit-fan",
+    "title": "Hollow Transit Fan",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Grey Fen Expanse",
+    "syntheticCoordinates": "N22.84 / E094.81",
+    "dateAdded": "2026-05-10",
+    "views": 661,
+    "image": "/assets/locations/hollow-transit-fan.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Hollow Transit Fan is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the transit fan reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "jade-signal-yard",
+    "title": "Jade Signal Yard",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Cinderplain",
+    "syntheticCoordinates": "S30.15 / E105.98",
+    "dateAdded": "2026-05-09",
+    "views": 650,
+    "image": "/assets/locations/jade-signal-yard.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Jade Signal Yard is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the signal yard reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "lumen-rail-basin",
+    "title": "Lumen Rail Basin",
+    "fictional": true,
+    "category": "Transport",
+    "region": "Alta Reed Flats",
+    "syntheticCoordinates": "N37.46 / W117.15",
+    "dateAdded": "2026-05-08",
+    "views": 639,
+    "image": "/assets/locations/lumen-rail-basin.png",
+    "summary": "A fictional transit work of pale lanes, service loops, and impossible approach roads.",
+    "description": "Lumen Rail Basin is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the rail basin reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "terminal",
+      "radial",
+      "transit"
+    ]
+  },
+  {
+    "slug": "brindle-mirror-field",
+    "title": "Brindle Mirror Field",
+    "fictional": true,
+    "category": "Science",
+    "region": "Whitefold Basin",
+    "syntheticCoordinates": "S44.78 / E128.32",
+    "dateAdded": "2026-05-07",
+    "views": 614,
+    "image": "/assets/locations/brindle-mirror-field.png",
+    "summary": "A generated science site of pads, service tracks, and instrument shadows.",
+    "description": "Brindle Mirror Field is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the mirror field reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "observatory",
+      "array",
+      "research"
+    ]
+  },
+  {
+    "slug": "dawn-receiver-array",
+    "title": "Dawn Receiver Array",
+    "fictional": true,
+    "category": "Science",
+    "region": "Isobar Plateau",
+    "syntheticCoordinates": "N52.09 / E139.50",
+    "dateAdded": "2026-05-06",
+    "views": 603,
+    "image": "/assets/locations/dawn-receiver-array.png",
+    "summary": "A generated science site of pads, service tracks, and instrument shadows.",
+    "description": "Dawn Receiver Array is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the receiver array reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "observatory",
+      "array",
+      "research"
+    ]
+  },
+  {
+    "slug": "fallow-weather-grid",
+    "title": "Fallow Weather Grid",
+    "fictional": true,
+    "category": "Science",
+    "region": "Dawnline Steppe",
+    "syntheticCoordinates": "S59.40 / W150.67",
+    "dateAdded": "2026-05-05",
+    "views": 592,
+    "image": "/assets/locations/fallow-weather-grid.png",
+    "summary": "A generated science site of pads, service tracks, and instrument shadows.",
+    "description": "Fallow Weather Grid is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the weather grid reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "observatory",
+      "array",
+      "research"
+    ]
+  },
+  {
+    "slug": "hollow-dish-garden",
+    "title": "Hollow Dish Garden",
+    "fictional": true,
+    "category": "Science",
+    "region": "Whitefold Basin",
+    "syntheticCoordinates": "N66.71 / E161.84",
+    "dateAdded": "2026-06-01",
+    "views": 581,
+    "image": "/assets/locations/hollow-dish-garden.png",
+    "summary": "A generated science site of pads, service tracks, and instrument shadows.",
+    "description": "Hollow Dish Garden is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the dish garden reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "observatory",
+      "array",
+      "research"
+    ]
+  },
+  {
+    "slug": "fallow-amphitheatre",
+    "title": "Fallow Amphitheatre",
+    "fictional": true,
+    "category": "Entertainment",
+    "region": "Green Glass Uplands",
+    "syntheticCoordinates": "S74.02 / E013.02",
+    "dateAdded": "2026-05-31",
+    "views": 612,
+    "image": "/assets/locations/fallow-amphitheatre.png",
+    "summary": "A fictional gathering place with an oversized footprint and theatrical geometry.",
+    "description": "Fallow Amphitheatre is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the amphitheatre reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "venue",
+      "civic",
+      "oval"
+    ]
+  },
+  {
+    "slug": "hollow-festival-oval",
+    "title": "Hollow Festival Oval",
+    "fictional": true,
+    "category": "Entertainment",
+    "region": "Morrow Vale",
+    "syntheticCoordinates": "N10.33 / W024.19",
+    "dateAdded": "2026-05-30",
+    "views": 601,
+    "image": "/assets/locations/hollow-festival-oval.png",
+    "summary": "A fictional gathering place with an oversized footprint and theatrical geometry.",
+    "description": "Hollow Festival Oval is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the festival oval reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "venue",
+      "civic",
+      "oval"
+    ]
+  },
+  {
+    "slug": "jade-moon-court",
+    "title": "Jade Moon Court",
+    "fictional": true,
+    "category": "Entertainment",
+    "region": "Still Orchard",
+    "syntheticCoordinates": "S17.64 / E035.36",
+    "dateAdded": "2026-05-29",
+    "views": 590,
+    "image": "/assets/locations/jade-moon-court.png",
+    "summary": "A fictional gathering place with an oversized footprint and theatrical geometry.",
+    "description": "Jade Moon Court is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the moon court reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "venue",
+      "civic",
+      "oval"
+    ]
+  },
+  {
+    "slug": "lumen-archive-arena",
+    "title": "Lumen Archive Arena",
+    "fictional": true,
+    "category": "Entertainment",
+    "region": "Green Glass Uplands",
+    "syntheticCoordinates": "N24.95 / E046.54",
+    "dateAdded": "2026-05-28",
+    "views": 579,
+    "image": "/assets/locations/lumen-archive-arena.png",
+    "summary": "A fictional gathering place with an oversized footprint and theatrical geometry.",
+    "description": "Lumen Archive Arena is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the archive arena reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "venue",
+      "civic",
+      "oval"
+    ]
+  },
+  {
+    "slug": "jade-pattern-garden",
+    "title": "Jade Pattern Garden",
+    "fictional": true,
+    "category": "Land Art",
+    "region": "Moss Meridian",
+    "syntheticCoordinates": "S32.26 / W057.71",
+    "dateAdded": "2026-05-27",
+    "views": 533,
+    "image": "/assets/locations/jade-pattern-garden.png",
+    "summary": "A generated earthwork where planted bands and bare ground form a visible pattern.",
+    "description": "Jade Pattern Garden is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the pattern garden reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "land-art",
+      "pattern",
+      "earthwork"
+    ]
+  },
+  {
+    "slug": "lumen-compass-walk",
+    "title": "Lumen Compass Walk",
+    "fictional": true,
+    "category": "Land Art",
+    "region": "Verdant Array",
+    "syntheticCoordinates": "N39.57 / E068.88",
+    "dateAdded": "2026-05-26",
+    "views": 522,
+    "image": "/assets/locations/lumen-compass-walk.png",
+    "summary": "A generated earthwork where planted bands and bare ground form a visible pattern.",
+    "description": "Lumen Compass Walk is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the compass walk reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "land-art",
+      "pattern",
+      "earthwork"
+    ]
+  },
+  {
+    "slug": "nacre-sunwork",
+    "title": "Nacre Sunwork",
+    "fictional": true,
+    "category": "Land Art",
+    "region": "Low Halo Plain",
+    "syntheticCoordinates": "S46.88 / E080.06",
+    "dateAdded": "2026-05-25",
+    "views": 511,
+    "image": "/assets/locations/nacre-sunwork.png",
+    "summary": "A generated earthwork where planted bands and bare ground form a visible pattern.",
+    "description": "Nacre Sunwork is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the sunwork reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "land-art",
+      "pattern",
+      "earthwork"
+    ]
+  },
+  {
+    "slug": "pale-line-field",
+    "title": "Pale Line Field",
+    "fictional": true,
+    "category": "Land Art",
+    "region": "Moss Meridian",
+    "syntheticCoordinates": "N54.20 / W091.23",
+    "dateAdded": "2026-05-24",
+    "views": 500,
+    "image": "/assets/locations/pale-line-field.png",
+    "summary": "A generated earthwork where planted bands and bare ground form a visible pattern.",
+    "description": "Pale Line Field is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the line field reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "land-art",
+      "pattern",
+      "earthwork"
+    ]
+  },
+  {
+    "slug": "nacre-canal-locks",
+    "title": "Nacre Canal Locks",
+    "fictional": true,
+    "category": "Waterworks",
+    "region": "Sable Delta",
+    "syntheticCoordinates": "S61.51 / E102.40",
+    "dateAdded": "2026-05-23",
+    "views": 503,
+    "image": "/assets/locations/nacre-canal-locks.png",
+    "summary": "A fictional water-control site of channels, basins, and service edges.",
+    "description": "Nacre Canal Locks is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the canal locks reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "canal",
+      "reservoir",
+      "water"
+    ]
+  },
+  {
+    "slug": "pale-reservoir-fork",
+    "title": "Pale Reservoir Fork",
+    "fictional": true,
+    "category": "Waterworks",
+    "region": "Brine Cut",
+    "syntheticCoordinates": "N68.82 / E113.57",
+    "dateAdded": "2026-05-22",
+    "views": 492,
+    "image": "/assets/locations/pale-reservoir-fork.png",
+    "summary": "A fictional water-control site of channels, basins, and service edges.",
+    "description": "Pale Reservoir Fork is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the reservoir fork reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "canal",
+      "reservoir",
+      "water"
+    ]
+  },
+  {
+    "slug": "red-pump-terrace",
+    "title": "Red Pump Terrace",
+    "fictional": true,
+    "category": "Waterworks",
+    "region": "Ternwater Flats",
+    "syntheticCoordinates": "S05.13 / W124.75",
+    "dateAdded": "2026-05-21",
+    "views": 481,
+    "image": "/assets/locations/red-pump-terrace.png",
+    "summary": "A fictional water-control site of channels, basins, and service edges.",
+    "description": "Red Pump Terrace is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the pump terrace reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "canal",
+      "reservoir",
+      "water"
+    ]
+  },
+  {
+    "slug": "tern-weir-garden",
+    "title": "Tern Weir Garden",
+    "fictional": true,
+    "category": "Waterworks",
+    "region": "Sable Delta",
+    "syntheticCoordinates": "N12.44 / E135.92",
+    "dateAdded": "2026-05-20",
+    "views": 470,
+    "image": "/assets/locations/tern-weir-garden.png",
+    "summary": "A fictional water-control site of channels, basins, and service edges.",
+    "description": "Tern Weir Garden is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the weir garden reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "canal",
+      "reservoir",
+      "water"
+    ]
+  },
+  {
+    "slug": "red-dome-quarter",
+    "title": "Red Dome Quarter",
+    "fictional": true,
+    "category": "Structures",
+    "region": "Nacre Peninsula",
+    "syntheticCoordinates": "S19.75 / E147.09",
+    "dateAdded": "2026-05-19",
+    "views": 459,
+    "image": "/assets/locations/red-dome-quarter.png",
+    "summary": "A generated built cluster with roofs, courtyards, and arranged service voids.",
+    "description": "Red Dome Quarter is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the dome quarter reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "structure",
+      "compound",
+      "roof"
+    ]
+  },
+  {
+    "slug": "tern-vault-yard",
+    "title": "Tern Vault Yard",
+    "fictional": true,
+    "category": "Structures",
+    "region": "Pale Civic Rise",
+    "syntheticCoordinates": "N27.06 / W158.27",
+    "dateAdded": "2026-05-18",
+    "views": 448,
+    "image": "/assets/locations/tern-vault-yard.png",
+    "summary": "A generated built cluster with roofs, courtyards, and arranged service voids.",
+    "description": "Tern Vault Yard is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the vault yard reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "structure",
+      "compound",
+      "roof"
+    ]
+  },
+  {
+    "slug": "verdant-nacre-campus",
+    "title": "Verdant Nacre Campus",
+    "fictional": true,
+    "category": "Structures",
+    "region": "Shellmark District",
+    "syntheticCoordinates": "S34.37 / E009.44",
+    "dateAdded": "2026-05-17",
+    "views": 437,
+    "image": "/assets/locations/verdant-nacre-campus.png",
+    "summary": "A generated built cluster with roofs, courtyards, and arranged service voids.",
+    "description": "Verdant Nacre Campus is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the nacre campus reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "structure",
+      "compound",
+      "roof"
+    ]
+  },
+  {
+    "slug": "yarrow-crown-house",
+    "title": "Yarrow Crown House",
+    "fictional": true,
+    "category": "Structures",
+    "region": "Nacre Peninsula",
+    "syntheticCoordinates": "N41.68 / E020.61",
+    "dateAdded": "2026-05-16",
+    "views": 426,
+    "image": "/assets/locations/yarrow-crown-house.png",
+    "summary": "A generated built cluster with roofs, courtyards, and arranged service voids.",
+    "description": "Yarrow Crown House is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the crown house reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "structure",
+      "compound",
+      "roof"
+    ]
+  },
+  {
+    "slug": "verdant-relay-yard",
+    "title": "Verdant Relay Yard",
+    "fictional": true,
+    "category": "Infrastructure",
+    "region": "Red Meridian",
+    "syntheticCoordinates": "S49.00 / W031.79",
+    "dateAdded": "2026-05-15",
+    "views": 443,
+    "image": "/assets/locations/verdant-relay-yard.png",
+    "summary": "A fictional utility field whose lines and pads imply a purpose that does not exist.",
+    "description": "Verdant Relay Yard is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the relay yard reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "relay",
+      "utility",
+      "grid"
+    ]
+  },
+  {
+    "slug": "yarrow-heat-exchange",
+    "title": "Yarrow Heat Exchange",
+    "fictional": true,
+    "category": "Infrastructure",
+    "region": "Ashline Mesa",
+    "syntheticCoordinates": "N56.31 / E042.96",
+    "dateAdded": "2026-05-14",
+    "views": 432,
+    "image": "/assets/locations/yarrow-heat-exchange.png",
+    "summary": "A fictional utility field whose lines and pads imply a purpose that does not exist.",
+    "description": "Yarrow Heat Exchange is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the heat exchange reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "relay",
+      "utility",
+      "grid"
+    ]
+  },
+  {
+    "slug": "brindle-power-fan",
+    "title": "Brindle Power Fan",
+    "fictional": true,
+    "category": "Infrastructure",
+    "region": "Copper Dust Plain",
+    "syntheticCoordinates": "S63.62 / E054.13",
+    "dateAdded": "2026-05-13",
+    "views": 421,
+    "image": "/assets/locations/brindle-power-fan.png",
+    "summary": "A fictional utility field whose lines and pads imply a purpose that does not exist.",
+    "description": "Brindle Power Fan is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the power fan reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "relay",
+      "utility",
+      "grid"
+    ]
+  },
+  {
+    "slug": "dawn-cable-plain",
+    "title": "Dawn Cable Plain",
+    "fictional": true,
+    "category": "Infrastructure",
+    "region": "Red Meridian",
+    "syntheticCoordinates": "N70.93 / W065.30",
+    "dateAdded": "2026-05-12",
+    "views": 410,
+    "image": "/assets/locations/dawn-cable-plain.png",
+    "summary": "A fictional utility field whose lines and pads imply a purpose that does not exist.",
+    "description": "Dawn Cable Plain is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the cable plain reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "relay",
+      "utility",
+      "grid"
+    ]
+  },
+  {
+    "slug": "brindle-drydock",
+    "title": "Brindle Drydock",
+    "fictional": true,
+    "category": "Maritime",
+    "region": "Cobalt Shoal",
+    "syntheticCoordinates": "S07.24 / E076.48",
+    "dateAdded": "2026-05-11",
+    "views": 357,
+    "image": "/assets/locations/brindle-drydock.png",
+    "summary": "A generated coastal work of piers, basins, and oddly calm water.",
+    "description": "Brindle Drydock is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the drydock reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "dock",
+      "harbor",
+      "shore"
+    ]
+  },
+  {
+    "slug": "dawn-shoal-yard",
+    "title": "Dawn Shoal Yard",
+    "fictional": true,
+    "category": "Maritime",
+    "region": "Blueglass Coast",
+    "syntheticCoordinates": "N14.55 / E087.65",
+    "dateAdded": "2026-05-10",
+    "views": 346,
+    "image": "/assets/locations/dawn-shoal-yard.png",
+    "summary": "A generated coastal work of piers, basins, and oddly calm water.",
+    "description": "Dawn Shoal Yard is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the shoal yard reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "dock",
+      "harbor",
+      "shore"
+    ]
+  },
+  {
+    "slug": "fallow-pier-maze",
+    "title": "Fallow Pier Maze",
+    "fictional": true,
+    "category": "Maritime",
+    "region": "Salt Reed Bay",
+    "syntheticCoordinates": "S21.86 / W098.82",
+    "dateAdded": "2026-05-09",
+    "views": 335,
+    "image": "/assets/locations/fallow-pier-maze.png",
+    "summary": "A generated coastal work of piers, basins, and oddly calm water.",
+    "description": "Fallow Pier Maze is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the pier maze reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "dock",
+      "harbor",
+      "shore"
+    ]
+  },
+  {
+    "slug": "hollow-harbor-comb",
+    "title": "Hollow Harbor Comb",
+    "fictional": true,
+    "category": "Maritime",
+    "region": "Cobalt Shoal",
+    "syntheticCoordinates": "N29.17 / E110.00",
+    "dateAdded": "2026-05-08",
+    "views": 324,
+    "image": "/assets/locations/hollow-harbor-comb.png",
+    "summary": "A generated coastal work of piers, basins, and oddly calm water.",
+    "description": "Hollow Harbor Comb is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the harbor comb reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "dock",
+      "harbor",
+      "shore"
+    ]
+  },
+  {
+    "slug": "fallow-step-pyramid",
+    "title": "Fallow Step Pyramid",
+    "fictional": true,
+    "category": "Ancient Forms",
+    "region": "Auric Steppe",
+    "syntheticCoordinates": "S36.48 / E121.17",
+    "dateAdded": "2026-05-07",
+    "views": 348,
+    "image": "/assets/locations/fallow-step-pyramid.png",
+    "summary": "A fictional monumental form with ceremonial geometry and no real history.",
+    "description": "Fallow Step Pyramid is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the step pyramid reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "monument",
+      "terrace",
+      "ancient-form"
+    ]
+  },
+  {
+    "slug": "hollow-sun-mound",
+    "title": "Hollow Sun Mound",
+    "fictional": true,
+    "category": "Ancient Forms",
+    "region": "Old Glass Desert",
+    "syntheticCoordinates": "N43.79 / W132.34",
+    "dateAdded": "2026-05-06",
+    "views": 337,
+    "image": "/assets/locations/hollow-sun-mound.png",
+    "summary": "A fictional monumental form with ceremonial geometry and no real history.",
+    "description": "Hollow Sun Mound is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the sun mound reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "monument",
+      "terrace",
+      "ancient-form"
+    ]
+  },
+  {
+    "slug": "jade-causeway-tomb",
+    "title": "Jade Causeway Tomb",
+    "fictional": true,
+    "category": "Ancient Forms",
+    "region": "Thorn Gold Plain",
+    "syntheticCoordinates": "S51.11 / E143.51",
+    "dateAdded": "2026-05-05",
+    "views": 326,
+    "image": "/assets/locations/jade-causeway-tomb.png",
+    "summary": "A fictional monumental form with ceremonial geometry and no real history.",
+    "description": "Jade Causeway Tomb is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the causeway tomb reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "monument",
+      "terrace",
+      "ancient-form"
+    ]
+  },
+  {
+    "slug": "lumen-terrace-shrine",
+    "title": "Lumen Terrace Shrine",
+    "fictional": true,
+    "category": "Ancient Forms",
+    "region": "Auric Steppe",
+    "syntheticCoordinates": "N58.42 / E154.69",
+    "dateAdded": "2026-06-01",
+    "views": 315,
+    "image": "/assets/locations/lumen-terrace-shrine.png",
+    "summary": "A fictional monumental form with ceremonial geometry and no real history.",
+    "description": "Lumen Terrace Shrine is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the terrace shrine reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "monument",
+      "terrace",
+      "ancient-form"
+    ]
+  },
+  {
+    "slug": "jade-stadium",
+    "title": "Jade Stadium",
+    "fictional": true,
+    "category": "Sports",
+    "region": "Night Orchard",
+    "syntheticCoordinates": "S65.73 / W165.86",
+    "dateAdded": "2026-05-31",
+    "views": 255,
+    "image": "/assets/locations/jade-stadium.png",
+    "summary": "A generated sport landscape with pitches, loops, and service courts.",
+    "description": "Jade Stadium is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the stadium reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "sport",
+      "field",
+      "oval"
+    ]
+  },
+  {
+    "slug": "lumen-training-oval",
+    "title": "Lumen Training Oval",
+    "fictional": true,
+    "category": "Sports",
+    "region": "Lampwick Downs",
+    "syntheticCoordinates": "N73.04 / E017.03",
+    "dateAdded": "2026-05-30",
+    "views": 244,
+    "image": "/assets/locations/lumen-training-oval.png",
+    "summary": "A generated sport landscape with pitches, loops, and service courts.",
+    "description": "Lumen Training Oval is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the training oval reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "sport",
+      "field",
+      "oval"
+    ]
+  },
+  {
+    "slug": "nacre-race-loop",
+    "title": "Nacre Race Loop",
+    "fictional": true,
+    "category": "Sports",
+    "region": "Greenline Borough",
+    "syntheticCoordinates": "S09.35 / E028.21",
+    "dateAdded": "2026-05-29",
+    "views": 233,
+    "image": "/assets/locations/nacre-race-loop.png",
+    "summary": "A generated sport landscape with pitches, loops, and service courts.",
+    "description": "Nacre Race Loop is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the race loop reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "sport",
+      "field",
+      "oval"
+    ]
+  },
+  {
+    "slug": "pale-night-pitch",
+    "title": "Pale Night Pitch",
+    "fictional": true,
+    "category": "Sports",
+    "region": "Night Orchard",
+    "syntheticCoordinates": "N16.66 / W039.38",
+    "dateAdded": "2026-05-28",
+    "views": 222,
+    "image": "/assets/locations/pale-night-pitch.png",
+    "summary": "A generated sport landscape with pitches, loops, and service courts.",
+    "description": "Pale Night Pitch is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the night pitch reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "sport",
+      "field",
+      "oval"
+    ]
+  },
+  {
+    "slug": "nacre-spiral-farms",
+    "title": "Nacre Spiral Farms",
+    "fictional": true,
+    "category": "Agriculture",
+    "region": "Pale River",
+    "syntheticCoordinates": "S23.97 / E050.55",
+    "dateAdded": "2026-05-27",
+    "views": 246,
+    "image": "/assets/locations/nacre-spiral-farms.png",
+    "summary": "A fictional agricultural pattern of fields, rows, and impossible water logic.",
+    "description": "Nacre Spiral Farms is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the spiral farms reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "farm",
+      "irrigation",
+      "field"
+    ]
+  },
+  {
+    "slug": "pale-crop-wheel",
+    "title": "Pale Crop Wheel",
+    "fictional": true,
+    "category": "Agriculture",
+    "region": "Barley Mirror",
+    "syntheticCoordinates": "N31.28 / E061.73",
+    "dateAdded": "2026-05-26",
+    "views": 235,
+    "image": "/assets/locations/pale-crop-wheel.png",
+    "summary": "A fictional agricultural pattern of fields, rows, and impossible water logic.",
+    "description": "Pale Crop Wheel is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the crop wheel reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "farm",
+      "irrigation",
+      "field"
+    ]
+  },
+  {
+    "slug": "red-irrigation-lace",
+    "title": "Red Irrigation Lace",
+    "fictional": true,
+    "category": "Agriculture",
+    "region": "Silt Ribbon Valley",
+    "syntheticCoordinates": "S38.59 / W072.90",
+    "dateAdded": "2026-05-25",
+    "views": 224,
+    "image": "/assets/locations/red-irrigation-lace.png",
+    "summary": "A fictional agricultural pattern of fields, rows, and impossible water logic.",
+    "description": "Red Irrigation Lace is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the irrigation lace reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "farm",
+      "irrigation",
+      "field"
+    ]
+  },
+  {
+    "slug": "tern-orchard-fan",
+    "title": "Tern Orchard Fan",
+    "fictional": true,
+    "category": "Agriculture",
+    "region": "Pale River",
+    "syntheticCoordinates": "N45.90 / E084.07",
+    "dateAdded": "2026-05-24",
+    "views": 213,
+    "image": "/assets/locations/tern-orchard-fan.png",
+    "summary": "A fictional agricultural pattern of fields, rows, and impossible water logic.",
+    "description": "Tern Orchard Fan is imaginary satellite-style content generated for VirtualSpaceTrotting. From above, the orchard fan reads as a convincing site, but every road, edge, shadow, and landmark belongs only to this fictional atlas.",
+    "tags": [
+      "farm",
+      "irrigation",
+      "field"
+    ]
   }
 ]

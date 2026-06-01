@@ -14,9 +14,12 @@ def main() -> int:
     expected_pages = [
         DIST_SITE / "index.html",
         DIST_SITE / "maps" / "index.html",
+        DIST_SITE / "maps" / "page" / "2" / "index.html",
+        DIST_SITE / "maps" / "page" / "5" / "index.html",
         DIST_SITE / "blog" / "index.html",
         DIST_SITE / "maps" / "asterfall-ring-terminal" / "index.html",
         DIST_SITE / "categories" / "transport" / "index.html",
+        DIST_SITE / "categories" / "transport" / "page" / "2" / "index.html",
     ]
     missing = [path for path in expected_pages if not path.exists()]
     if missing:

@@ -5,7 +5,7 @@
 <header class="site-header">
   <div class="inner">
     <div class="brand-row">
-      <h1 class="brand"><a href="/">VirtualSpaceTrotting</a></h1>
+      <p class="brand"><a href="/">VirtualSpaceTrotting</a></p>
       <p class="tagline">Imaginary satellite curiosities</p>
     </div>
     <nav aria-label="Primary navigation">

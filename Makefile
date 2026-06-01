@@ -1,4 +1,4 @@
-.PHONY: help setup test test-unit test-runtime test-code-quality preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
+.PHONY: help setup test test-unit test-runtime test-code-quality content-corpus preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
 
 .DEFAULT_GOAL := help
 
@@ -16,7 +16,7 @@ help:
 	@printf '%s\n' '  make setup                 Prepare local gitignored state.'
 	@printf '%s\n' '  make test                  Run the focused helper test suite.'
 	@printf '%s\n' '  make test-code-quality     Compile Python helper code.'
-	@printf '%s\n' '  make build                 Generate imagery and build SvelteKit plus Rust runtime.'
+	@printf '%s\n' '  make build                 Generate content/imagery and build SvelteKit plus Rust runtime.'
 	@printf '%s\n' '  make bundle                Build a committed-HEAD release bundle.'
 	@printf '%s\n' '  make prepare-linode-host   Create/attach Linode host and write remote receipt.'
 	@printf '%s\n' '  make deploy-linode-one-shot Create/attach Linode and install the Spin service.'
@@ -42,10 +42,14 @@ test-runtime:
 test-code-quality:
 	$(PYTHON) -m compileall -q scripts
 
-preview-imagery:
+content-corpus:
+	$(PYTHON) scripts/generate_location_corpus.py
+
+preview-imagery: content-corpus
 	$(PYTHON) scripts/generate_preview_imagery.py
 
 site-build: preview-imagery
+	pnpm --dir site install --frozen-lockfile
 	pnpm --dir site build
 	$(PYTHON) scripts/verify_static_output.py
 

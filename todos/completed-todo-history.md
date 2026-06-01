@@ -1,5 +1,20 @@
 # Completed TODO History
 
+## 2026-06-01 - Paginated Content Depth
+
+Type: feature.
+
+Expanded the fictional location corpus from 12 to 64 entries, added deterministic corpus generation, added map index pagination, added category pagination, and corrected the header brand markup so page-level headings remain semantic.
+
+Evidence:
+
+- red/green `scripts.tests.test_site_content_contract`
+- red/green `scripts.tests.test_static_output_contract`
+- `make test`
+- `make test-code-quality`
+- `make build`
+- browser inspection of `/maps/page/5/` and `/categories/transport/page/2/`
+
 ## 2026-06-01 - SvelteKit Site And Spin Runtime Scaffold
 
 Type: feature and deployment groundwork.

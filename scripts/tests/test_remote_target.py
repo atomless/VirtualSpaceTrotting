@@ -217,6 +217,15 @@ class RemoteTargetTests(unittest.TestCase):
         self.assertEqual(receipt["metadata"]["last_deployed_commit"], "deadbeef")
         self.assertTrue(receipt["metadata"]["last_deployed_at_utc"].endswith("Z"))
 
+    def test_remote_update_script_can_swap_opt_app_directory(self) -> None:
+        script_path = remote_target.write_remote_update_script(self.temp_dir)
+        script = script_path.read_text(encoding="utf-8")
+
+        self.assertIn("sudo mkdir -p \"${NEXT_APP_DIR}\"", script)
+        self.assertIn("sudo mv \"${REMOTE_APP_DIR}\" \"${PREV_APP_DIR}\"", script)
+        self.assertIn("sudo mv \"${NEXT_APP_DIR}\" \"${REMOTE_APP_DIR}\"", script)
+        self.assertIn("sudo chown -R \"$(id -u):$(id -g)\" \"${REMOTE_APP_DIR}\"", script)
+
 
 if __name__ == "__main__":
     unittest.main()

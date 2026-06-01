@@ -1,0 +1,91 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1d261f;
+  background: #f6f7f8;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: #225c73; }
+figure { margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+p, li, figcaption { overflow-wrap: anywhere; }
+
+.site-header,
+.site-footer {
+  background: #233027;
+  color: #fff;
+}
+
+.site-header a,
+.site-footer a { color: #fff; }
+.site-header { border-bottom: 4px solid #8ea36b; }
+
+.inner,
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.inner { padding-block: 0.75rem; }
+.brand { margin: 0; font-size: 1.45rem; }
+.tagline { margin: 0; color: #dce4d2; }
+
+.brand-row,
+.nav-list,
+.meta-list,
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  align-items: baseline;
+}
+
+.nav-list,
+.meta-list,
+.inline-list {
+  padding: 0;
+  list-style: none;
+}
+
+.nav-list { margin: 0.8rem 0 0; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 1.2rem; }
+.layout > * { min-width: 0; }
+section, article, aside { margin-bottom: 1.25rem; }
+
+.panel,
+.location-card {
+  background: #fff;
+  border: 1px solid #c8d0cc;
+}
+
+.panel { padding: 0.8rem; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); gap: 1rem; }
+h1, h2, h3, .hero h2 { margin: 0 0 0.5rem; }
+.hero p, .panel p { margin-top: 0; }
+
+.location-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+  padding: 0;
+  list-style: none;
+}
+
+.location-card a { text-decoration: none; }
+.location-card img { aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 1px solid #c8d0cc; }
+.location-card div { padding: 0.65rem; }
+.location-card h3 { font-size: 1rem; }
+.fineprint, .meta-list, figcaption { color: #596150; font-size: 0.9rem; }
+.detail-image { margin: 0 0 1rem; }
+.detail-image img { border: 1px solid #c8d0cc; }
+.sidebar-list { margin: 0; padding-left: 1.1rem; }
+
+@media (max-width: 760px) {
+  .layout,
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}

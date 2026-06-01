@@ -333,32 +333,37 @@ NEXT_APP_DIR="${REMOTE_APP_DIR}.next"
 PREV_APP_DIR="${REMOTE_APP_DIR}.prev"
 FAILED_APP_DIR="${REMOTE_APP_DIR}.failed"
 
-rm -rf "${NEXT_APP_DIR}"
-mkdir -p "${NEXT_APP_DIR}"
+sudo rm -rf "${NEXT_APP_DIR}"
+sudo mkdir -p "${NEXT_APP_DIR}"
+sudo chown "$(id -u):$(id -g)" "${NEXT_APP_DIR}"
 tar -xzf "${RELEASE_ARCHIVE_PATH}" -C "${NEXT_APP_DIR}"
 
 if [[ -f "${REMOTE_APP_DIR}/.env.local" ]]; then
-  cp "${REMOTE_APP_DIR}/.env.local" "${NEXT_APP_DIR}/.env.local"
+  sudo cp "${REMOTE_APP_DIR}/.env.local" "${NEXT_APP_DIR}/.env.local"
+  sudo chown "$(id -u):$(id -g)" "${NEXT_APP_DIR}/.env.local"
   chmod 600 "${NEXT_APP_DIR}/.env.local"
 fi
 
 if [[ -d "${REMOTE_APP_DIR}/.spin" ]]; then
-  cp -a "${REMOTE_APP_DIR}/.spin" "${NEXT_APP_DIR}/.spin"
+  sudo cp -a "${REMOTE_APP_DIR}/.spin" "${NEXT_APP_DIR}/.spin"
+  sudo chown -R "$(id -u):$(id -g)" "${NEXT_APP_DIR}/.spin"
 fi
 
 cp "${RELEASE_METADATA_PATH}" "${NEXT_APP_DIR}/.vst-release.json"
-rm -rf "${PREV_APP_DIR}"
+sudo rm -rf "${PREV_APP_DIR}"
 if [[ -d "${REMOTE_APP_DIR}" ]]; then
-  mv "${REMOTE_APP_DIR}" "${PREV_APP_DIR}"
+  sudo mv "${REMOTE_APP_DIR}" "${PREV_APP_DIR}"
 fi
-mv "${NEXT_APP_DIR}" "${REMOTE_APP_DIR}"
+sudo mv "${NEXT_APP_DIR}" "${REMOTE_APP_DIR}"
+sudo chown -R "$(id -u):$(id -g)" "${REMOTE_APP_DIR}"
 
 if ! sudo systemctl restart "${REMOTE_SERVICE_NAME}"; then
   echo "Remote service restart failed; attempting rollback." >&2
   if [[ -d "${PREV_APP_DIR}" ]]; then
-    rm -rf "${FAILED_APP_DIR}"
-    mv "${REMOTE_APP_DIR}" "${FAILED_APP_DIR}" || true
-    mv "${PREV_APP_DIR}" "${REMOTE_APP_DIR}"
+    sudo rm -rf "${FAILED_APP_DIR}"
+    sudo mv "${REMOTE_APP_DIR}" "${FAILED_APP_DIR}" || true
+    sudo mv "${PREV_APP_DIR}" "${REMOTE_APP_DIR}"
+    sudo chown -R "$(id -u):$(id -g)" "${REMOTE_APP_DIR}"
     sudo systemctl restart "${REMOTE_SERVICE_NAME}" || true
   fi
   exit 1

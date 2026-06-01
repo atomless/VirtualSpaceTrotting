@@ -1,0 +1,11 @@
+[package]
+name = "virtual_space_trotting"
+version = "0.1.0"
+edition = "2021"
+description = "VirtualSpaceTrotting Spin runtime."
+
+[lib]
+crate-type = ["rlib"]
+
+[dependencies]
+spin-sdk = "2.2.0"

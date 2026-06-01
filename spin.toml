@@ -1,0 +1,25 @@
+spin_manifest_version = 2
+
+[application]
+name = "virtual-space-trotting"
+version = "0.1.0"
+description = "A static atlas of fictional generated satellite-style places."
+
+[[trigger.http]]
+route = "/health"
+component = "runtime"
+
+[[trigger.http]]
+route = "/..."
+component = "site-files"
+
+[component.runtime]
+source = "dist/wasm/virtual_space_trotting.wasm"
+
+[component.runtime.build]
+command = "cargo rustc --target wasm32-wasip1 --release --lib --crate-type cdylib && mkdir -p dist/wasm && cp target/wasm32-wasip1/release/virtual_space_trotting.wasm dist/wasm/virtual_space_trotting.wasm"
+
+[component.site-files]
+source = { url = "https://github.com/fermyon/spin-fileserver/releases/download/v0.3.0/spin_static_fs.wasm", digest = "sha256:ef88708817e107bf49985c7cefe4dd1f199bf26f6727819183d5c996baa3d148" }
+files = [{ source = "dist/site", destination = "/" }]
+environment = { CACHE_CONTROL = "public, max-age=300" }

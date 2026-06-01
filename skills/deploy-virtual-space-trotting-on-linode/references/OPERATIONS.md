@@ -18,8 +18,10 @@ Never commit `.env.local` or `.vst/`.
 ## Setup
 
 ```bash
-make prepare-linode-host PREPARE_LINODE_ARGS="--remote-name prod --region us-east --profile small"
+make deploy-linode-one-shot DEPLOY_LINODE_ARGS="--remote-name prod --region us-east --profile small"
 ```
+
+Use `make prepare-linode-host` only when you want to create or record a Linode receipt without installing the application service.
 
 ## Day-2 Commands
 
@@ -59,3 +61,7 @@ The helper attempts rollback when health fails. Inspect:
 make remote-logs
 make remote-status
 ```
+
+### First Deploy Not Publicly Reachable
+
+The default first deploy serves Spin on port `3000` and records `http://<server-ip>:3000`. If you want a domain/TLS front door, point your reverse proxy or DNS at the host and rerun the deploy with `--public-base-url <url>` so local receipts open the canonical URL.

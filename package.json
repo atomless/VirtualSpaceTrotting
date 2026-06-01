@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "packageManager": "pnpm@10.29.2",
+  "scripts": {
+    "build": "pnpm --dir site build",
+    "check": "pnpm --dir site check"
+  }
+}

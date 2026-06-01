@@ -1,0 +1,16 @@
+{
+  "name": "virtual-space-trotting-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "check": "svelte-kit sync && vite build --mode check"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "3.0.10",
+    "@sveltejs/kit": "2.61.1",
+    "@sveltejs/vite-plugin-svelte": "5.1.1",
+    "svelte": "5.56.0",
+    "vite": "6.4.2"
+  }
+}

@@ -1,4 +1,4 @@
-.PHONY: help setup test test-unit test-code-quality build bundle prepare-linode-host remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
+.PHONY: help setup test test-unit test-runtime test-code-quality preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
 
 .DEFAULT_GOAL := help
 
@@ -8,6 +8,7 @@ VST_LOCAL_STATE_DIR ?= .vst
 REMOTE_RECEIPTS_DIR ?= $(VST_LOCAL_STATE_DIR)/remotes
 BUNDLE_DIR ?= $(VST_LOCAL_STATE_DIR)/bundles
 PREPARE_LINODE_ARGS ?=
+DEPLOY_LINODE_ARGS ?=
 REMOTE ?=
 
 help:
@@ -15,9 +16,10 @@ help:
 	@printf '%s\n' '  make setup                 Prepare local gitignored state.'
 	@printf '%s\n' '  make test                  Run the focused helper test suite.'
 	@printf '%s\n' '  make test-code-quality     Compile Python helper code.'
-	@printf '%s\n' '  make build                 Build app once SvelteKit/Spin scaffold exists.'
+	@printf '%s\n' '  make build                 Generate imagery and build SvelteKit plus Rust runtime.'
 	@printf '%s\n' '  make bundle                Build a committed-HEAD release bundle.'
 	@printf '%s\n' '  make prepare-linode-host   Create/attach Linode host and write remote receipt.'
+	@printf '%s\n' '  make deploy-linode-one-shot Create/attach Linode and install the Spin service.'
 	@printf '%s\n' '  make remote-use REMOTE=x   Select a remote receipt.'
 	@printf '%s\n' '  make remote-update         Ship committed HEAD to the selected remote.'
 	@printf '%s\n' '  make remote-status|remote-logs|remote-start|remote-stop|remote-open-site'
@@ -26,23 +28,33 @@ setup:
 	@mkdir -p "$(VST_LOCAL_STATE_DIR)" "$(REMOTE_RECEIPTS_DIR)" "$(BUNDLE_DIR)"
 	@touch "$(ENV_LOCAL)"
 	@chmod 600 "$(ENV_LOCAL)"
+	pnpm --dir site install
 	@printf '%s\n' 'Local state prepared.'
 
-test: test-unit
+test: test-unit test-runtime
 
 test-unit:
 	$(PYTHON) -m unittest discover -s scripts/tests -p 'test_*.py'
 
+test-runtime:
+	cargo test
+
 test-code-quality:
 	$(PYTHON) -m compileall -q scripts
 
-build:
-	@if [ ! -f package.json ] || [ ! -f spin.toml ] || [ ! -f Cargo.toml ]; then \
-		printf '%s\n' 'Application scaffold is not present yet; build will be enabled when the SvelteKit, Spin, and Rust runtime lands.' >&2; \
-		exit 2; \
-	fi
-	@printf '%s\n' 'Application scaffold exists, but build wiring has not been implemented yet.' >&2
-	@exit 2
+preview-imagery:
+	$(PYTHON) scripts/generate_preview_imagery.py
+
+site-build: preview-imagery
+	pnpm --dir site build
+	$(PYTHON) scripts/verify_static_output.py
+
+build-runtime:
+	cargo rustc --target wasm32-wasip1 --release --lib --crate-type cdylib
+	@mkdir -p dist/wasm
+	@cp target/wasm32-wasip1/release/virtual_space_trotting.wasm dist/wasm/virtual_space_trotting.wasm
+
+build: site-build build-runtime
 
 bundle:
 	@mkdir -p "$(BUNDLE_DIR)"
@@ -56,6 +68,12 @@ prepare-linode-host: setup
 		--env-file "$(ENV_LOCAL)" \
 		--remote-receipts-dir "$(REMOTE_RECEIPTS_DIR)" \
 		$(PREPARE_LINODE_ARGS)
+
+deploy-linode-one-shot: setup
+	$(PYTHON) scripts/deploy/linode_one_shot.py \
+		--env-file "$(ENV_LOCAL)" \
+		--remote-receipts-dir "$(REMOTE_RECEIPTS_DIR)" \
+		$(DEPLOY_LINODE_ARGS)
 
 remote-use:
 	@test -n "$(REMOTE)" || (printf '%s\n' 'REMOTE=<name> is required.' >&2; exit 2)

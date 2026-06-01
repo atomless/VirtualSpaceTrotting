@@ -1,5 +1,7 @@
 # VirtualSpaceTrotting
 
+![VirtualSpaceTrotting paginated maps view](docs/assets/virtual-space-trotting-page-5.png)
+
 VirtualSpaceTrotting exists first as a realistic test site for Akamai mPulse Boomerang real user monitoring. The fictional atlas gives Boomerang enough page depth, navigation variety, generated imagery, and static asset weight to exercise browse, category, detail, and content-heavy page views without relying on a production customer site.
 
 The public browsing structure is a deep fictional atlas: map/category browsing, popular and latest lists, location detail pages, and lightweight editorial context. Every location, image, and place description in this project must be fictional and clearly treated as generated content.

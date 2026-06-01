@@ -7,7 +7,7 @@ VirtualSpaceTrotting exists to make browsing imaginary locations feel as rich an
 ## Core Goals
 
 1. Build a fast static SvelteKit site served by Spin with a small Rust runtime.
-2. Preserve the broad browsing grammar of Virtual Globetrotting without copying its content or assets.
+2. Preserve a deep, browsable atlas grammar without copying external content or assets.
 3. Populate launch with a planned, coherent corpus of generated locations.
 4. Keep generated imagery provenance clear and auditable.
 5. Keep setup, test, build, and deploy paths simple and Makefile-driven.

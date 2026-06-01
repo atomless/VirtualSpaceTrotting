@@ -14,14 +14,14 @@ This file provides instructions for coding agents working in this repository.
 
 ## Product Direction
 
-VirtualSpaceTrotting is a pre-launch static site inspired by the layout and browsing structure of `virtualglobetrotting.com`, but all locations and imagery are imaginary. The site must never present generated places as real-world discoveries.
+VirtualSpaceTrotting is a pre-launch static site for browsing imaginary satellite-style locations and testing Akamai mPulse Boomerang instrumentation. The site must never present generated places as real-world discoveries.
 
 Core goals:
 
 - Build a static SvelteKit experience served by Spin with a small Rust runtime.
 - Keep the site modular: content data, generated imagery metadata, route rendering, and deployment helpers should stay separate.
 - Populate launch with enough generated locations to make browsing feel alive; decide the launch content target in a documented plan before bulk generation.
-- Preserve the browsing feel of map/location/category/timeline pages while avoiding copied content, copied source assets, or user-confusing claims.
+- Preserve a deep browsing feel across map/location/category/timeline pages while avoiding copied content, copied source assets, or user-confusing claims.
 - Keep deployment simple for a Linode-hosted systemd service.
 
 ## Required Workflow

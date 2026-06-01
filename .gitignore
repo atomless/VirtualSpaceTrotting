@@ -1,0 +1,14 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+.spin/
+.svelte-kit/
+.vst/
+dist/
+node_modules/
+target/
+coverage/
+__pycache__/
+*.pyc
+*.log

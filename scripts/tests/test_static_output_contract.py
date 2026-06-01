@@ -6,6 +6,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 ROOT_LAYOUT = REPO_ROOT / "site" / "src" / "routes" / "+layout.js"
 APP_TEMPLATE = REPO_ROOT / "site" / "src" / "app.html"
 SVELTE_CONFIG = REPO_ROOT / "site" / "svelte.config.js"
+LISTING_PAGE_TEMPLATES = [
+    REPO_ROOT / "site" / "src" / "routes" / "maps" / "+page.svelte",
+    REPO_ROOT / "site" / "src" / "routes" / "maps" / "page" / "[page]" / "+page.svelte",
+    REPO_ROOT / "site" / "src" / "routes" / "categories" / "[slug]" / "+page.svelte",
+    REPO_ROOT / "site" / "src" / "routes" / "categories" / "[slug]" / "page" / "[page]" / "+page.svelte",
+]
 
 
 class StaticOutputContractTests(unittest.TestCase):
@@ -38,6 +44,13 @@ class StaticOutputContractTests(unittest.TestCase):
                 / "+page.js"
             ).exists()
         )
+
+    def test_listing_pages_place_pagination_before_location_list(self) -> None:
+        for path in LISTING_PAGE_TEMPLATES:
+            with self.subTest(path=path.relative_to(REPO_ROOT)):
+                template = path.read_text(encoding="utf-8")
+
+                self.assertLess(template.index("<PageNav"), template.index("<LocationList"))
 
     def test_static_output_verifier_covers_paginated_depth(self) -> None:
         verifier = (REPO_ROOT / "scripts" / "verify_static_output.py").read_text(encoding="utf-8")

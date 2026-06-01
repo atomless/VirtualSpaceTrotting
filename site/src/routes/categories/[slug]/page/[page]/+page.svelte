@@ -12,8 +12,8 @@
     <p>
       {data.category.count} fictional generated maps in this category. Page {data.page.currentPage} of {data.page.totalPages}.
     </p>
-    <LocationList locations={data.locations} />
     <PageNav page={data.page} basePath={`/categories/${data.category.slug}`} />
+    <LocationList locations={data.locations} />
   </section>
 
   <SiteSidebar />

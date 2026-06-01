@@ -10,8 +10,8 @@
   <section aria-labelledby="all-maps">
     <h1 id="all-maps">Browse Maps</h1>
     <p>Satellite-style views of places that do not exist. Page {data.page.currentPage} of {data.page.totalPages}.</p>
-    <LocationList locations={data.locations} />
     <PageNav page={data.page} basePath="/maps" />
+    <LocationList locations={data.locations} />
   </section>
 
   <SiteSidebar />

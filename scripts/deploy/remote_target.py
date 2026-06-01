@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import ipaddress
 import json
+import os
 import re
 import shlex
 import shutil
@@ -27,6 +28,7 @@ DEFAULT_DURABLE_STATE_DIR = REPO_ROOT / ".vst"
 DEFAULT_REMOTE_RECEIPTS_DIR = DEFAULT_DURABLE_STATE_DIR / "remotes"
 REMOTE_RECEIPT_SCHEMA = "virtual_space_trotting.remote_target.v1"
 ACTIVE_REMOTE_ENV_KEY = "VST_ACTIVE_REMOTE"
+BOOMERANG_API_KEY_ENV_KEY = "BOOMERANG_API_KEY"
 DEFAULT_BACKEND_KIND = "ssh_systemd"
 DEFAULT_APP_DIR = "/opt/virtual-space-trotting"
 DEFAULT_SERVICE_NAME = "virtual-space-trotting"
@@ -42,6 +44,17 @@ REMOTE_HEALTH_RETRY_DELAY_SECONDS = 2
 
 def fail(message: str) -> None:
     raise SystemExit(message)
+
+
+def require_boomerang_api_key(env_file: Path) -> str:
+    value = read_env_value(env_file, BOOMERANG_API_KEY_ENV_KEY).strip()
+    if not value:
+        fail(f"{BOOMERANG_API_KEY_ENV_KEY} is required in {env_file} before deploying an mPulse test site.")
+    if any(character.isspace() for character in value):
+        fail(f"{BOOMERANG_API_KEY_ENV_KEY} cannot contain whitespace.")
+    if not re.fullmatch(r"[A-Za-z0-9-]+", value):
+        fail(f"{BOOMERANG_API_KEY_ENV_KEY} can contain only letters, numbers, and hyphens.")
+    return value
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -289,9 +302,17 @@ def open_site(receipt: dict[str, Any]) -> int:
     return int(result.returncode)
 
 
-def build_release_bundle(*, repo_root: Path, work_dir: Path) -> tuple[Path, Path, dict[str, Any]]:
+def build_release_bundle(
+    *,
+    repo_root: Path,
+    work_dir: Path,
+    boomerang_api_key: Optional[str] = None,
+) -> tuple[Path, Path, dict[str, Any]]:
     archive_path = work_dir / "vst-release.tar.gz"
     metadata_path = work_dir / "vst-release.json"
+    env = None
+    if boomerang_api_key:
+        env = {**os.environ, BOOMERANG_API_KEY_ENV_KEY: boomerang_api_key}
     result = subprocess.run(
         [
             "python3",
@@ -304,6 +325,7 @@ def build_release_bundle(*, repo_root: Path, work_dir: Path) -> tuple[Path, Path
             str(metadata_path),
         ],
         cwd=str(repo_root),
+        env=env,
         capture_output=True,
         text=True,
         check=False,
@@ -461,10 +483,15 @@ def refresh_remote_receipt_metadata(
     write_json(remote_receipt_path(receipts_dir, name), receipt)
 
 
-def perform_remote_update(receipt: dict[str, Any], receipts_dir: Path) -> int:
+def perform_remote_update(receipt: dict[str, Any], receipts_dir: Path, *, env_file: Path) -> int:
+    boomerang_api_key = require_boomerang_api_key(env_file)
     with tempfile.TemporaryDirectory(prefix="vst-remote-update-") as temp_dir:
         work_dir = Path(temp_dir)
-        archive_path, metadata_path, metadata = build_release_bundle(repo_root=REPO_ROOT, work_dir=work_dir)
+        archive_path, metadata_path, metadata = build_release_bundle(
+            repo_root=REPO_ROOT,
+            work_dir=work_dir,
+            boomerang_api_key=boomerang_api_key,
+        )
         update_script_path = write_remote_update_script(work_dir)
         copy_file_to_remote(receipt, archive_path, REMOTE_UPDATE_ARCHIVE_PATH)
         copy_file_to_remote(receipt, metadata_path, REMOTE_UPDATE_METADATA_PATH)
@@ -572,7 +599,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     receipt = select_remote(getattr(args, "name", None), env_file, receipts_dir)
     if args.command == "update":
-        return perform_remote_update(receipt, receipts_dir)
+        return perform_remote_update(receipt, receipts_dir, env_file=env_file)
     if args.command == "open-site":
         return open_site(receipt)
 

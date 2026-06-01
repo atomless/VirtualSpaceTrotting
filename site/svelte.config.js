@@ -11,6 +11,10 @@ const config = {
     prerender: {
       crawl: true,
       entries: ['*']
+    },
+    env: {
+      dir: '..',
+      publicPrefix: 'BOOMERANG_'
     }
   }
 };

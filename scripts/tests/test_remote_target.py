@@ -183,7 +183,10 @@ class RemoteTargetTests(unittest.TestCase):
         self.assertEqual(receipt["deploy"]["health_path"], "/health")
 
     def test_update_uploads_bundle_runs_install_and_refreshes_metadata(self) -> None:
-        self.env_file.write_text("VST_ACTIVE_REMOTE=prod\n", encoding="utf-8")
+        self.env_file.write_text(
+            "VST_ACTIVE_REMOTE=prod\nBOOMERANG_API_KEY=ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\n",
+            encoding="utf-8",
+        )
         bundle_dir = self.temp_dir / "bundle"
         bundle_dir.mkdir()
         archive_path = bundle_dir / "release.tar.gz"
@@ -228,6 +231,24 @@ class RemoteTargetTests(unittest.TestCase):
         receipt = json.loads(self.receipt_path.read_text(encoding="utf-8"))
         self.assertEqual(receipt["metadata"]["last_deployed_commit"], "deadbeef")
         self.assertTrue(receipt["metadata"]["last_deployed_at_utc"].endswith("Z"))
+
+    def test_update_requires_boomerang_api_key_before_building_release(self) -> None:
+        self.env_file.write_text("VST_ACTIVE_REMOTE=prod\n", encoding="utf-8")
+
+        with patch.object(remote_target, "build_release_bundle") as build_release:
+            with self.assertRaises(SystemExit) as raised:
+                remote_target.main(
+                    [
+                        "--env-file",
+                        str(self.env_file),
+                        "--receipts-dir",
+                        str(self.receipts_dir),
+                        "update",
+                    ]
+                )
+
+        self.assertIn("BOOMERANG_API_KEY", str(raised.exception))
+        build_release.assert_not_called()
 
     def test_remote_update_script_can_swap_opt_app_directory(self) -> None:
         script_path = remote_target.write_remote_update_script(self.temp_dir)

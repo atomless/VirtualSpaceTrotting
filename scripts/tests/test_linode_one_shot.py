@@ -92,7 +92,43 @@ class LinodeOneShotTests(unittest.TestCase):
         self.assertIn("ExecStart=/usr/local/bin/spin up --listen 0.0.0.0:${REMOTE_PUBLIC_PORT}", script)
         self.assertIn("http://127.0.0.1:${REMOTE_PUBLIC_PORT}/health", script)
 
+    def test_deploy_requires_boomerang_api_key_before_building_release(self) -> None:
+        client = FakeLinodeClient("linode-secret")
+
+        with patch.object(deploy, "LinodeApiClient", return_value=client), patch.object(
+            deploy,
+            "ensure_ssh_keypair",
+            return_value=(
+                Path("/Users/test/.ssh/virtual-space-trotting-linode"),
+                Path("/Users/test/.ssh/virtual-space-trotting-linode.pub"),
+                "ssh-ed25519 AAAATEST virtual-space-trotting-linode",
+            ),
+        ), patch.object(deploy, "wait_for_ssh_ready", return_value=None), patch.object(
+            deploy, "build_release_bundle"
+        ) as build_release:
+            with self.assertRaises(SystemExit) as raised:
+                deploy.main(
+                    [
+                        "--linode-token",
+                        "linode-secret",
+                        "--env-file",
+                        str(self.env_file),
+                        "--receipt-output",
+                        str(self.receipt_path),
+                        "--remote-name",
+                        "prod",
+                        "--remote-receipts-dir",
+                        str(self.remote_receipts_dir),
+                        "--label",
+                        "vst-test",
+                    ]
+                )
+
+        self.assertIn("BOOMERANG_API_KEY", str(raised.exception))
+        build_release.assert_not_called()
+
     def test_fresh_deploy_creates_instance_uploads_release_and_writes_receipts(self) -> None:
+        self.env_file.write_text("BOOMERANG_API_KEY=ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\n", encoding="utf-8")
         client = FakeLinodeClient("linode-secret")
 
         with patch.object(deploy, "LinodeApiClient", return_value=client), patch.object(
@@ -156,7 +192,10 @@ class LinodeOneShotTests(unittest.TestCase):
         self.assertEqual(remote_receipt["metadata"]["last_deployed_commit"], "deadbeef")
 
     def test_existing_instance_can_override_public_base_url(self) -> None:
-        self.env_file.write_text("LINODE_TOKEN=stored-token\n", encoding="utf-8")
+        self.env_file.write_text(
+            "LINODE_TOKEN=stored-token\nBOOMERANG_API_KEY=ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\n",
+            encoding="utf-8",
+        )
         client = FakeLinodeClient("stored-token")
 
         with patch.object(deploy, "LinodeApiClient", return_value=client), patch.object(

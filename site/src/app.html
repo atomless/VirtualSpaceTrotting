@@ -7,6 +7,31 @@
       name="description"
       content="VirtualSpaceTrotting is an atlas of fictional generated satellite-style locations."
     />
+    <script>
+      window.BOOMR_live = 1;
+      window.BOOMR_config = {
+        Errors: { monitorReporting: true, monitorRejections: true },
+        LOGN: { storeConfig: true },
+        Continuity: { afterOnload: true, afterOnloadMaxLength: false }
+      };
+      window.BOOMR = window.BOOMR || {};
+      window.BOOMR_API_key = "%sveltekit.env.BOOMERANG_API_KEY%";
+    </script>
+    <script>
+      (function initBoomerang() {
+        var apiKey = "%sveltekit.env.BOOMERANG_API_KEY%";
+        if (!apiKey) return;
+        var script = document.createElement("script");
+        script.async = true;
+        script.src = "https://c.go-mpulse.net/boomerang/%sveltekit.env.BOOMERANG_API_KEY%";
+        var firstScript = document.getElementsByTagName("script")[0];
+        if (firstScript && firstScript.parentNode) {
+          firstScript.parentNode.insertBefore(script, firstScript);
+          return;
+        }
+        document.head.appendChild(script);
+      })();
+    </script>
     %sveltekit.head%
   </head>
   <body>

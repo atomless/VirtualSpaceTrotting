@@ -5,12 +5,21 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tarfile
 import tempfile
 from pathlib import Path
 from typing import Optional
+
+SCRIPT_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(SCRIPT_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_REPO_ROOT))
+
+from scripts.deploy.local_env import read_env_value  # noqa: E402
+
+BOOMERANG_API_KEY_ENV = "BOOMERANG_API_KEY"
 
 
 def run_git(repo_root: Path, *args: str) -> str:
@@ -40,10 +49,20 @@ def extract_head_tree(repo_root: Path, destination: Path) -> None:
     archive_path.unlink()
 
 
-def run_build_target(checkout_root: Path, target: str) -> None:
+def boomerang_build_env(repo_root: Path) -> dict[str, str]:
+    key = (read_env_value(repo_root / ".env.local", BOOMERANG_API_KEY_ENV) or os.environ.get(BOOMERANG_API_KEY_ENV, "")).strip()
+    if not key:
+        return {}
+    return {BOOMERANG_API_KEY_ENV: key}
+
+
+def run_build_target(checkout_root: Path, target: str, *, env_overrides: Optional[dict[str, str]] = None) -> None:
+    build_env = os.environ.copy()
+    build_env.update(env_overrides or {})
     result = subprocess.run(
         ["make", "--no-print-directory", target],
         cwd=str(checkout_root),
+        env=build_env,
         capture_output=True,
         text=True,
         check=False,
@@ -98,13 +117,14 @@ def main() -> int:
         commit = run_git(repo_root, "rev-parse", "HEAD")
         status_output = run_git(repo_root, "status", "--porcelain")
         dirty_worktree = bool(status_output.strip())
+        env_overrides = boomerang_build_env(repo_root)
 
         with tempfile.TemporaryDirectory(prefix="vst-linode-bundle-") as temp_dir:
             staging_root = Path(temp_dir)
             extract_head_tree(repo_root, staging_root)
             build_ran = False
             if build_target:
-                run_build_target(staging_root, build_target)
+                run_build_target(staging_root, build_target, env_overrides=env_overrides)
                 build_ran = True
             write_release_archive(staging_root, archive_output)
 
@@ -114,6 +134,7 @@ def main() -> int:
                 {
                     "build_ran": build_ran,
                     "build_target": build_target or "",
+                    "boomerang_api_key_present": BOOMERANG_API_KEY_ENV in env_overrides,
                     "commit": commit,
                     "dirty_worktree": dirty_worktree,
                     "repo_root": str(repo_root),

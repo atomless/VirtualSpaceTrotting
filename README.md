@@ -25,7 +25,7 @@ The intended setup path is deliberately small:
    cd VirtualSpaceTrotting
    ```
 
-2. Add the two local setup values.
+2. Add the local setup values.
 
    ```bash
    cp .env.example .env.local
@@ -33,16 +33,16 @@ The intended setup path is deliberately small:
    chmod 600 .env.local
    ```
 
-   Fill in:
+   Fill in `LINODE_TOKEN`. Add `BOOMERANG_API_KEY` when the mPulse app exists.
 
    ```bash
    LINODE_TOKEN=paste-your-linode-token-here
-   BOOMERANG_API_KEY=paste-your-mpulse-boomerang-api-key-here
+   BOOMERANG_API_KEY=optional-paste-your-mpulse-boomerang-api-key-here
    ```
 
    `.env.local` is gitignored. Do not commit it.
 
-3. Create the Akamai mPulse Boomerang app and get this site's API key.
+3. Create the Akamai mPulse Boomerang app and get this site's API key when you are ready to collect mPulse data.
 
    - Make sure your Akamai account has mPulse App Administrator privileges.
    - Log in to mPulse.
@@ -58,7 +58,7 @@ The intended setup path is deliberately small:
 
    Use this exact instruction:
 
-   > Run the project setup, create or update the Linode remote named `prod`, deploy the current committed `main` branch using the Boomerang API key already in `.env.local`, and verify the public `/health` endpoint, a paginated maps page, the Boomerang script request, and an mPulse beacon.
+   > Run the project setup, create or update the Linode remote named `prod`, deploy the current committed `main` branch, and verify the public `/health` endpoint and a paginated maps page. If `BOOMERANG_API_KEY` is present in `.env.local`, also verify the Boomerang script request and an mPulse beacon.
 
    The agent should run the project helper:
 
@@ -95,7 +95,7 @@ The committed page template already contains this pattern:
 </script>
 ```
 
-`BOOMERANG_API_KEY` is substituted at build time. `make deploy-linode-one-shot` and `make remote-update` refuse to deploy without it, so an agent only needs the two values in `.env.local`.
+`BOOMERANG_API_KEY` is substituted at build time when present. Without it, the committed snippet stays inert and deployments still proceed.
 
 ## Current Status
 
@@ -136,4 +136,4 @@ The current launch seed is 64 fictional locations across 11 categories. The map 
 
 ## Deployment Notes
 
-The first-run Linode helper needs `LINODE_TOKEN` and `BOOMERANG_API_KEY` in `.env.local` and creates or attaches a host. By default it serves the Spin app publicly on port `3000`; pass `--public-base-url` when pointing a domain or reverse proxy at the service.
+The first-run Linode helper needs `LINODE_TOKEN` in `.env.local` and creates or attaches a host. `BOOMERANG_API_KEY` is optional for deployment and enables mPulse instrumentation when present. By default the helper serves the Spin app publicly on port `3000`; pass `--public-base-url` when pointing a domain or reverse proxy at the service.

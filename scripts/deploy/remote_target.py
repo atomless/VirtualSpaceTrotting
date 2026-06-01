@@ -46,10 +46,10 @@ def fail(message: str) -> None:
     raise SystemExit(message)
 
 
-def require_boomerang_api_key(env_file: Path) -> str:
+def read_boomerang_api_key(env_file: Path) -> Optional[str]:
     value = read_env_value(env_file, BOOMERANG_API_KEY_ENV_KEY).strip()
     if not value:
-        fail(f"{BOOMERANG_API_KEY_ENV_KEY} is required in {env_file} before deploying an mPulse test site.")
+        return None
     if any(character.isspace() for character in value):
         fail(f"{BOOMERANG_API_KEY_ENV_KEY} cannot contain whitespace.")
     if not re.fullmatch(r"[A-Za-z0-9-]+", value):
@@ -484,7 +484,7 @@ def refresh_remote_receipt_metadata(
 
 
 def perform_remote_update(receipt: dict[str, Any], receipts_dir: Path, *, env_file: Path) -> int:
-    boomerang_api_key = require_boomerang_api_key(env_file)
+    boomerang_api_key = read_boomerang_api_key(env_file)
     with tempfile.TemporaryDirectory(prefix="vst-remote-update-") as temp_dir:
         work_dir = Path(temp_dir)
         archive_path, metadata_path, metadata = build_release_bundle(

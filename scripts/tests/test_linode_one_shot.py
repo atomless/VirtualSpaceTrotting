@@ -92,7 +92,7 @@ class LinodeOneShotTests(unittest.TestCase):
         self.assertIn("ExecStart=/usr/local/bin/spin up --listen 0.0.0.0:${REMOTE_PUBLIC_PORT}", script)
         self.assertIn("http://127.0.0.1:${REMOTE_PUBLIC_PORT}/health", script)
 
-    def test_deploy_requires_boomerang_api_key_before_building_release(self) -> None:
+    def test_deploy_can_build_release_without_boomerang_api_key(self) -> None:
         client = FakeLinodeClient("linode-secret")
 
         with patch.object(deploy, "LinodeApiClient", return_value=client), patch.object(
@@ -104,28 +104,35 @@ class LinodeOneShotTests(unittest.TestCase):
                 "ssh-ed25519 AAAATEST virtual-space-trotting-linode",
             ),
         ), patch.object(deploy, "wait_for_ssh_ready", return_value=None), patch.object(
-            deploy, "build_release_bundle"
-        ) as build_release:
-            with self.assertRaises(SystemExit) as raised:
-                deploy.main(
-                    [
-                        "--linode-token",
-                        "linode-secret",
-                        "--env-file",
-                        str(self.env_file),
-                        "--receipt-output",
-                        str(self.receipt_path),
-                        "--remote-name",
-                        "prod",
-                        "--remote-receipts-dir",
-                        str(self.remote_receipts_dir),
-                        "--label",
-                        "vst-test",
-                    ]
-                )
+            deploy,
+            "build_release_bundle",
+            return_value=(self.archive_path, self.metadata_path, {"commit": "deadbeef", "dirty_worktree": False}),
+        ) as build_release, patch.object(
+            deploy, "write_remote_bootstrap_script", return_value=self.bootstrap_path
+        ), patch.object(
+            deploy, "copy_file_to_remote"
+        ), patch.object(
+            deploy, "run_remote_bootstrap", return_value=0
+        ):
+            rc = deploy.main(
+                [
+                    "--linode-token",
+                    "linode-secret",
+                    "--env-file",
+                    str(self.env_file),
+                    "--receipt-output",
+                    str(self.receipt_path),
+                    "--remote-name",
+                    "prod",
+                    "--remote-receipts-dir",
+                    str(self.remote_receipts_dir),
+                    "--label",
+                    "vst-test",
+                ]
+            )
 
-        self.assertIn("BOOMERANG_API_KEY", str(raised.exception))
-        build_release.assert_not_called()
+        self.assertEqual(rc, 0)
+        self.assertIsNone(build_release.call_args.kwargs["boomerang_api_key"])
 
     def test_fresh_deploy_creates_instance_uploads_release_and_writes_receipts(self) -> None:
         self.env_file.write_text("BOOMERANG_API_KEY=ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\n", encoding="utf-8")

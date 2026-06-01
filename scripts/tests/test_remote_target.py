@@ -232,23 +232,42 @@ class RemoteTargetTests(unittest.TestCase):
         self.assertEqual(receipt["metadata"]["last_deployed_commit"], "deadbeef")
         self.assertTrue(receipt["metadata"]["last_deployed_at_utc"].endswith("Z"))
 
-    def test_update_requires_boomerang_api_key_before_building_release(self) -> None:
+    def test_update_can_build_release_without_boomerang_api_key(self) -> None:
         self.env_file.write_text("VST_ACTIVE_REMOTE=prod\n", encoding="utf-8")
+        bundle_dir = self.temp_dir / "bundle-no-boomerang"
+        bundle_dir.mkdir()
+        archive_path = bundle_dir / "release.tar.gz"
+        archive_path.write_text("bundle\n", encoding="utf-8")
+        metadata_path = bundle_dir / "release.json"
+        metadata_path.write_text(json.dumps({"commit": "deadbeef", "dirty_worktree": False}) + "\n", encoding="utf-8")
+        update_script_path = bundle_dir / "remote-update.sh"
+        update_script_path.write_text("#!/bin/sh\n", encoding="utf-8")
 
-        with patch.object(remote_target, "build_release_bundle") as build_release:
-            with self.assertRaises(SystemExit) as raised:
-                remote_target.main(
-                    [
-                        "--env-file",
-                        str(self.env_file),
-                        "--receipts-dir",
-                        str(self.receipts_dir),
-                        "update",
-                    ]
-                )
+        with patch.object(
+            remote_target,
+            "build_release_bundle",
+            return_value=(archive_path, metadata_path, {"commit": "deadbeef"}),
+        ) as build_release, patch.object(
+            remote_target, "write_remote_update_script", return_value=update_script_path
+        ), patch.object(
+            remote_target, "copy_file_to_remote"
+        ), patch.object(
+            remote_target, "run_remote_update_install", return_value=0
+        ), patch.object(
+            remote_target, "run_remote_health_check", return_value=0
+        ):
+            rc = remote_target.main(
+                [
+                    "--env-file",
+                    str(self.env_file),
+                    "--receipts-dir",
+                    str(self.receipts_dir),
+                    "update",
+                ]
+            )
 
-        self.assertIn("BOOMERANG_API_KEY", str(raised.exception))
-        build_release.assert_not_called()
+        self.assertEqual(rc, 0)
+        self.assertIsNone(build_release.call_args.kwargs["boomerang_api_key"])
 
     def test_remote_update_script_can_swap_opt_app_directory(self) -> None:
         script_path = remote_target.write_remote_update_script(self.temp_dir)

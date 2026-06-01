@@ -35,7 +35,7 @@ from scripts.deploy.remote_target import (  # noqa: E402
     DEFAULT_SERVICE_NAME,
     build_remote_receipt,
     copy_file_to_remote,
-    require_boomerang_api_key,
+    read_boomerang_api_key,
     shell_env_assignments,
     ssh_command_for_operation,
     write_json,
@@ -234,7 +234,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ensure_env_file(env_file)
 
     token = resolve_linode_token(args, env_file)
-    boomerang_api_key = require_boomerang_api_key(env_file)
+    boomerang_api_key = read_boomerang_api_key(env_file)
     private_key_path, public_key_path, public_key = ensure_ssh_keypair(Path(args.ssh_private_key_file))
 
     client = LinodeApiClient(token)

@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -49,6 +50,17 @@ class RemoteTargetTests(unittest.TestCase):
     def test_default_remote_receipts_dir_uses_durable_project_state(self) -> None:
         self.assertEqual(remote_target.DEFAULT_REMOTE_RECEIPTS_DIR, remote_target.REPO_ROOT / ".vst" / "remotes")
         self.assertNotIn("/.spin/", str(remote_target.DEFAULT_REMOTE_RECEIPTS_DIR))
+
+    def test_script_can_be_invoked_directly_from_repo_root(self) -> None:
+        result = subprocess.run(
+            [sys.executable, str(remote_target.REPO_ROOT / "scripts" / "deploy" / "remote_target.py"), "--help"],
+            cwd=remote_target.REPO_ROOT,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("usage:", result.stdout)
 
     def test_use_command_persists_active_remote_in_env_file(self) -> None:
         rc = remote_target.main(

@@ -48,7 +48,7 @@ For any non-trivial change, define success before implementation begins.
 
 ## Deployment Helpers
 
-- Local operator state is stored in `.vst/`.
+- Local deployment state is stored in `.vst/`.
 - Local secrets are stored in `.env.local`.
 - Use `make prepare-linode-host` to create or attach a Linode host receipt.
 - Use `make remote-use`, `make remote-status`, `make remote-logs`, `make remote-start`, `make remote-stop`, `make remote-open-site`, and `make remote-update` for day-2 operations.

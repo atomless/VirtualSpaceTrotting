@@ -33,7 +33,6 @@ from scripts.deploy.remote_target import (
 from scripts.deploy.setup_common import (
     DEFAULT_ENV_FILE,
     prompt_secret,
-    resolve_operator_allowlist,
     utc_now_iso,
     write_json,
 )
@@ -192,8 +191,6 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser.add_argument("--env-file", default=str(DEFAULT_ENV_FILE))
     parser.add_argument("--linode-token", help="Linode Personal Access Token override")
     parser.add_argument("--no-store-token", action="store_true")
-    parser.add_argument("--operator-ip", help="Explicit VST_OPERATOR_IP_ALLOWLIST value")
-    parser.add_argument("--yes", action="store_true", help="Accept detected defaults where safe")
     parser.add_argument(
         "--ssh-private-key-file",
         default=str(Path("~/.ssh/virtual-space-trotting-linode").expanduser()),
@@ -226,12 +223,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ensure_env_file(env_file)
 
     token = resolve_linode_token(args, env_file)
-    operator_allowlist = resolve_operator_allowlist(
-        explicit_value=args.operator_ip or "",
-        persisted_value=read_env_value(env_file, "VST_OPERATOR_IP_ALLOWLIST"),
-        env_value="",
-        accept_detected_default=args.yes,
-    )
     private_key_path, public_key_path, public_key = ensure_ssh_keypair(Path(args.ssh_private_key_file))
 
     client = LinodeApiClient(token)
@@ -259,7 +250,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     if not args.no_store_token:
         upsert_env_value(env_file, "LINODE_TOKEN", token)
-    upsert_env_value(env_file, "VST_OPERATOR_IP_ALLOWLIST", operator_allowlist)
 
     remote_receipt_path = write_remote_receipt(
         receipts_dir=remote_receipts_dir,
@@ -291,7 +281,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "service_name": DEFAULT_SERVICE_NAME,
             "public_base_url": public_base_url,
         },
-        "operator_allowlist": operator_allowlist,
         "remote_receipt_path": str(remote_receipt_path),
     }
     write_json(receipt_output, receipt)

@@ -98,23 +98,25 @@ class LinodeHostSetupTests(unittest.TestCase):
                     str(self.remote_receipts_dir),
                     "--label",
                     "vst-test",
-                    "--operator-ip",
-                    "203.0.113.8/32",
-                    "--yes",
                 ]
             )
 
         self.assertEqual(rc, 0)
         env_text = self.env_file.read_text(encoding="utf-8")
-        self.assertIn("LINODE_TOKEN=linode-secret", env_text)
-        self.assertIn("VST_OPERATOR_IP_ALLOWLIST=203.0.113.8/32", env_text)
-        self.assertIn("VST_ACTIVE_REMOTE=prod", env_text)
+        self.assertEqual(
+            sorted(line for line in env_text.splitlines() if line),
+            ["LINODE_TOKEN=linode-secret", "VST_ACTIVE_REMOTE=prod"],
+        )
 
         receipt = json.loads(self.receipt_path.read_text(encoding="utf-8"))
         self.assertEqual(receipt["mode"], "fresh-instance")
         self.assertEqual(receipt["linode"]["instance_id"], 123)
         self.assertEqual(receipt["linode"]["public_ipv4"], "198.51.100.24")
         self.assertEqual(receipt["ssh"]["user"], "vst")
+        self.assertEqual(
+            sorted(receipt.keys()),
+            ["created_at_utc", "linode", "mode", "remote_receipt_path", "runtime", "schema", "ssh"],
+        )
 
         remote_receipt = json.loads((self.remote_receipts_dir / "prod.json").read_text(encoding="utf-8"))
         self.assertEqual(remote_receipt["schema"], "virtual_space_trotting.remote_target.v1")
@@ -146,9 +148,6 @@ class LinodeHostSetupTests(unittest.TestCase):
                     str(self.remote_receipts_dir),
                     "--existing-instance-id",
                     "456",
-                    "--operator-ip",
-                    "198.51.100.9/32",
-                    "--yes",
                 ]
             )
 

@@ -75,7 +75,7 @@ Documentation-only changes do not require runtime tests, but the response must s
 
 ## Deployment And Operations
 
-- Durable local operator state belongs in `.vst/`.
+- Durable local deployment state belongs in `.vst/`.
 - Local secrets belong in `.env.local`, which must stay gitignored.
 - Linode host setup writes `.vst/linode-host-setup.json` and `.vst/remotes/<name>.json`.
 - `make remote-update` ships committed `HEAD`; a dirty worktree is not deployed.

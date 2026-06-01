@@ -8,7 +8,7 @@ The public browsing structure is inspired by [Virtual Globetrotting](https://vir
 
 The repository has been initialized with:
 
-- project governance copied and adapted from Shuma Gorath,
+- project governance tailored to this repository,
 - lean Linode setup and remote-update helper patterns,
 - test coverage for the helper layer,
 - Makefile targets for setup, verification, and remote operations.

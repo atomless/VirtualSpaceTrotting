@@ -1,4 +1,4 @@
-"""Shared helpers for gitignored local operator env files."""
+"""Shared helpers for gitignored local env files."""
 
 from __future__ import annotations
 

@@ -25,7 +25,7 @@ The helper:
 
 ## Human Boundary
 
-The operator must already have a Linode account. If `LINODE_TOKEN` is missing, ask them to create a Linode Personal Access Token in Cloud Manager and either paste it into the prompt or add it to `.env.local`.
+You must already have a Linode account. If `LINODE_TOKEN` is missing, ask for a Linode Personal Access Token from Cloud Manager or add it to `.env.local`.
 
 ## Useful Flags
 
@@ -35,9 +35,7 @@ The operator must already have a Linode account. If `LINODE_TOKEN` is missing, a
 - `--profile small|medium|large`
 - `--type <linode-plan>`
 - `--image <linode-image>`
-- `--operator-ip <cidr>`
 - `--public-base-url <url>`
-- `--yes`
 
 ## Handoff
 

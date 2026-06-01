@@ -2,7 +2,7 @@
 
 ## Scope
 
-Initialize the empty `atomless/VirtualSpaceTrotting` repository with reusable project governance and lean helper patterns from Shuma Gorath, stripped of bot-defence, gateway, telemetry, and adversary-simulation specifics.
+Initialize the empty `atomless/VirtualSpaceTrotting` repository with project governance and lean deployment helper patterns focused only on this static generated-location site.
 
 ## Assumptions
 
@@ -16,7 +16,7 @@ Initialize the empty `atomless/VirtualSpaceTrotting` repository with reusable pr
    - Proof: `git remote -v`.
 2. Project guidance exists and is specific to imaginary generated locations.
    - Proof: `AGENTS.md`, `CONTRIBUTING.md`, and `docs/project-principles.md`.
-3. Linode helper patterns are renamed and stripped of Shuma-specific gateway/bot-defence behavior.
+3. Linode helper patterns are focused on this static site and avoid unrelated source-project behavior.
    - Proof: `scripts/deploy/*`, `skills/*linode*/SKILL.md`.
 4. Helper behavior has focused tests.
    - Proof: `make test`.

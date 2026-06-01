@@ -4,6 +4,46 @@ VirtualSpaceTrotting is a pre-launch static site for touring imaginary, AI-gener
 
 The public browsing structure is inspired by [Virtual Globetrotting](https://virtualglobetrotting.com/): map/category browsing, popular and latest lists, location detail pages, and lightweight editorial context. The crucial difference is that every location, image, and place description in this project must be fictional and clearly treated as generated content.
 
+## Setup And Deploy
+
+The intended setup path is deliberately small:
+
+1. Clone the repository.
+
+   ```bash
+   git clone https://github.com/atomless/VirtualSpaceTrotting.git
+   cd VirtualSpaceTrotting
+   ```
+
+2. Add a Linode access token to the local environment file.
+
+   ```bash
+   printf 'LINODE_TOKEN=%s\n' 'paste-your-linode-token-here' > .env.local
+   chmod 600 .env.local
+   ```
+
+   `.env.local` is gitignored. Do not commit the token.
+
+3. Tell your coding agent to set up the remote and deploy the site.
+
+   Use this exact instruction:
+
+   > Run the project setup, create or update the Linode remote named `prod`, deploy the current committed `main` branch, and verify the public `/health` endpoint and a paginated maps page.
+
+   The agent should run the project helper:
+
+   ```bash
+   make deploy-linode-one-shot DEPLOY_LINODE_ARGS="--remote-name prod --region gb-lon --profile small"
+   ```
+
+   After the first deploy, updates use:
+
+   ```bash
+   make remote-update
+   ```
+
+Release bundles are built from committed `HEAD`. Commit and push the work you want deployed before asking the agent to deploy or update the remote.
+
 ## Current Status
 
 The repository has been initialized with:
@@ -17,7 +57,7 @@ The repository has been initialized with:
 - a Rust Spin health component and static-file serving manifest,
 - a first-run Linode deploy helper that installs Spin as a systemd service.
 
-## Canonical Commands
+## Local Commands
 
 ```bash
 make setup
@@ -29,7 +69,7 @@ make build
 Linode host setup and day-2 operations:
 
 ```bash
-make deploy-linode-one-shot DEPLOY_LINODE_ARGS="--remote-name prod --region us-east"
+make deploy-linode-one-shot DEPLOY_LINODE_ARGS="--remote-name prod --region gb-lon --profile small"
 make remote-use REMOTE=prod
 make remote-status
 make remote-update

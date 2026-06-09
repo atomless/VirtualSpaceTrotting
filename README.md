@@ -33,7 +33,7 @@ The intended setup path is deliberately small:
    chmod 600 .env.local
    ```
 
-   Fill in `LINODE_TOKEN`. Add `BOOMERANG_API_KEY` when the mPulse app exists.
+   Fill in `LINODE_TOKEN`. Add `BOOMERANG_API_KEY` when the mPulse app exists and you want a default key for local builds and deploys.
 
    ```bash
    LINODE_TOKEN=paste-your-linode-token-here
@@ -72,6 +72,12 @@ The intended setup path is deliberately small:
    make remote-update
    ```
 
+   To deploy the same committed site against a different mPulse backend or tenant without editing `.env.local`, set `BOOMERANG_API_KEY` for that one command:
+
+   ```bash
+   BOOMERANG_API_KEY=tenant-specific-mpulse-key make remote-update
+   ```
+
 Release bundles are built from committed `HEAD`. Commit and push the work you want deployed before asking the agent to deploy or update the remote.
 
 ## Boomerang Snippet
@@ -95,7 +101,7 @@ The committed page template already contains this pattern:
 </script>
 ```
 
-`BOOMERANG_API_KEY` is substituted at build time when present. Without it, the committed snippet stays inert and deployments still proceed.
+`BOOMERANG_API_KEY` is substituted at build time when present. A non-empty process environment value takes precedence over `.env.local`, so deployment engineers can temporarily target another mPulse backend or tenant with `BOOMERANG_API_KEY=... make remote-update`. Without a key, the committed snippet stays inert and deployments still proceed.
 
 ## Current Status
 
@@ -136,4 +142,4 @@ The current launch seed is 64 fictional locations across 11 categories. The map 
 
 ## Deployment Notes
 
-The first-run Linode helper needs `LINODE_TOKEN` in `.env.local` and creates or attaches a host. `BOOMERANG_API_KEY` is optional for deployment and enables mPulse instrumentation when present. By default the helper serves the Spin app publicly on port `3000`; pass `--public-base-url` when pointing a domain or reverse proxy at the service.
+The first-run Linode helper needs `LINODE_TOKEN` in `.env.local` and creates or attaches a host. `BOOMERANG_API_KEY` is optional for deployment and enables mPulse instrumentation when present. If `BOOMERANG_API_KEY` is supplied in the process environment for `make deploy-linode-one-shot`, `make remote-update`, or `make bundle`, that value overrides `.env.local` for the build. By default the helper serves the Spin app publicly on port `3000`; pass `--public-base-url` when pointing a domain or reverse proxy at the service.

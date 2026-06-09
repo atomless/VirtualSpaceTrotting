@@ -1,9 +1,11 @@
 import json
+import os
 import subprocess
 import tarfile
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -130,6 +132,32 @@ class BuildReleaseBundleTests(unittest.TestCase):
             key_file = archive.extractfile("dist/site/boomerang-key.txt")
             assert key_file is not None
             self.assertEqual(key_file.read().decode("utf-8").strip(), "ABCDE-FGHIJ-KLMNO-PQRST-UVWXY")
+
+    def test_process_env_boomerang_api_key_overrides_env_file(self) -> None:
+        repo_root = self.create_git_repo()
+        (repo_root / "Makefile").write_text(
+            "build:\n"
+            "\t@mkdir -p dist/site\n"
+            "\t@printf '%s\\n' \"$$BOOMERANG_API_KEY\" > dist/site/boomerang-key.txt\n",
+            encoding="utf-8",
+        )
+        subprocess.run(["git", "add", "Makefile"], cwd=repo_root, check=True)
+        subprocess.run(["git", "commit", "-m", "add build"], cwd=repo_root, check=True, capture_output=True)
+        (repo_root / ".env.local").write_text(
+            "BOOMERANG_API_KEY=ENV-FILE-KEY\n",
+            encoding="utf-8",
+        )
+        archive_output = repo_root / "release.tar.gz"
+        metadata_output = repo_root / "release.json"
+
+        with patch.dict(os.environ, {"BOOMERANG_API_KEY": "PROCESS-ENV-KEY"}):
+            result = run_bundle(repo_root, archive_output, metadata_output)
+
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        with tarfile.open(archive_output, "r:gz") as archive:
+            key_file = archive.extractfile("dist/site/boomerang-key.txt")
+            assert key_file is not None
+            self.assertEqual(key_file.read().decode("utf-8").strip(), "PROCESS-ENV-KEY")
 
 
 if __name__ == "__main__":

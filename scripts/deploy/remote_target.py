@@ -47,7 +47,10 @@ def fail(message: str) -> None:
 
 
 def read_boomerang_api_key(env_file: Path) -> Optional[str]:
-    value = read_env_value(env_file, BOOMERANG_API_KEY_ENV_KEY).strip()
+    value = os.environ.get(BOOMERANG_API_KEY_ENV_KEY, "").strip() or read_env_value(
+        env_file,
+        BOOMERANG_API_KEY_ENV_KEY,
+    ).strip()
     if not value:
         return None
     if any(character.isspace() for character in value):

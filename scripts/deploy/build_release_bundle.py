@@ -50,7 +50,10 @@ def extract_head_tree(repo_root: Path, destination: Path) -> None:
 
 
 def boomerang_build_env(repo_root: Path) -> dict[str, str]:
-    key = (read_env_value(repo_root / ".env.local", BOOMERANG_API_KEY_ENV) or os.environ.get(BOOMERANG_API_KEY_ENV, "")).strip()
+    key = os.environ.get(BOOMERANG_API_KEY_ENV, "").strip() or read_env_value(
+        repo_root / ".env.local",
+        BOOMERANG_API_KEY_ENV,
+    ).strip()
     if not key:
         return {}
     return {BOOMERANG_API_KEY_ENV: key}

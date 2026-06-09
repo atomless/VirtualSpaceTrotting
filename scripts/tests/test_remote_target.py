@@ -269,6 +269,46 @@ class RemoteTargetTests(unittest.TestCase):
         self.assertEqual(rc, 0)
         self.assertIsNone(build_release.call_args.kwargs["boomerang_api_key"])
 
+    def test_update_process_env_boomerang_api_key_overrides_env_file(self) -> None:
+        self.env_file.write_text(
+            "VST_ACTIVE_REMOTE=prod\nBOOMERANG_API_KEY=ENV-FILE-KEY\n",
+            encoding="utf-8",
+        )
+        bundle_dir = self.temp_dir / "bundle-process-env"
+        bundle_dir.mkdir()
+        archive_path = bundle_dir / "release.tar.gz"
+        archive_path.write_text("bundle\n", encoding="utf-8")
+        metadata_path = bundle_dir / "release.json"
+        metadata_path.write_text(json.dumps({"commit": "deadbeef", "dirty_worktree": False}) + "\n", encoding="utf-8")
+        update_script_path = bundle_dir / "remote-update.sh"
+        update_script_path.write_text("#!/bin/sh\n", encoding="utf-8")
+
+        with patch.dict(remote_target.os.environ, {"BOOMERANG_API_KEY": "PROCESS-ENV-KEY"}), patch.object(
+            remote_target,
+            "build_release_bundle",
+            return_value=(archive_path, metadata_path, {"commit": "deadbeef"}),
+        ) as build_release, patch.object(
+            remote_target, "write_remote_update_script", return_value=update_script_path
+        ), patch.object(
+            remote_target, "copy_file_to_remote"
+        ), patch.object(
+            remote_target, "run_remote_update_install", return_value=0
+        ), patch.object(
+            remote_target, "run_remote_health_check", return_value=0
+        ):
+            rc = remote_target.main(
+                [
+                    "--env-file",
+                    str(self.env_file),
+                    "--receipts-dir",
+                    str(self.receipts_dir),
+                    "update",
+                ]
+            )
+
+        self.assertEqual(rc, 0)
+        self.assertEqual(build_release.call_args.kwargs["boomerang_api_key"], "PROCESS-ENV-KEY")
+
     def test_remote_update_script_can_swap_opt_app_directory(self) -> None:
         script_path = remote_target.write_remote_update_script(self.temp_dir)
         script = script_path.read_text(encoding="utf-8")

@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -133,6 +134,56 @@ class LinodeOneShotTests(unittest.TestCase):
 
         self.assertEqual(rc, 0)
         self.assertIsNone(build_release.call_args.kwargs["boomerang_api_key"])
+
+    def test_deploy_process_env_boomerang_api_key_overrides_env_file(self) -> None:
+        self.env_file.write_text(
+            "BOOMERANG_API_KEY=ENV-FILE-KEY\n",
+            encoding="utf-8",
+        )
+        client = FakeLinodeClient("linode-secret")
+
+        with patch.dict(os.environ, {"BOOMERANG_API_KEY": "PROCESS-ENV-KEY"}), patch.object(
+            deploy, "LinodeApiClient", return_value=client
+        ), patch.object(
+            deploy,
+            "ensure_ssh_keypair",
+            return_value=(
+                Path("/Users/test/.ssh/virtual-space-trotting-linode"),
+                Path("/Users/test/.ssh/virtual-space-trotting-linode.pub"),
+                "ssh-ed25519 AAAATEST virtual-space-trotting-linode",
+            ),
+        ), patch.object(
+            deploy, "wait_for_ssh_ready", return_value=None
+        ), patch.object(
+            deploy,
+            "build_release_bundle",
+            return_value=(self.archive_path, self.metadata_path, {"commit": "deadbeef", "dirty_worktree": False}),
+        ) as build_release, patch.object(
+            deploy, "write_remote_bootstrap_script", return_value=self.bootstrap_path
+        ), patch.object(
+            deploy, "copy_file_to_remote"
+        ), patch.object(
+            deploy, "run_remote_bootstrap", return_value=0
+        ):
+            rc = deploy.main(
+                [
+                    "--linode-token",
+                    "linode-secret",
+                    "--env-file",
+                    str(self.env_file),
+                    "--receipt-output",
+                    str(self.receipt_path),
+                    "--remote-name",
+                    "prod",
+                    "--remote-receipts-dir",
+                    str(self.remote_receipts_dir),
+                    "--label",
+                    "vst-test",
+                ]
+            )
+
+        self.assertEqual(rc, 0)
+        self.assertEqual(build_release.call_args.kwargs["boomerang_api_key"], "PROCESS-ENV-KEY")
 
     def test_fresh_deploy_creates_instance_uploads_release_and_writes_receipts(self) -> None:
         self.env_file.write_text("BOOMERANG_API_KEY=ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\n", encoding="utf-8")

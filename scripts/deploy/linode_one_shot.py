@@ -26,6 +26,7 @@ from scripts.deploy.linode_host_setup import (  # noqa: E402
     summarize_instance,
 )
 from scripts.deploy.local_env import ensure_env_file, upsert_env_value  # noqa: E402
+from scripts.deploy.mpulse_host_setup import build_setup_archive, run_remote_install  # noqa: E402
 from scripts.deploy.remote_target import (  # noqa: E402
     ACTIVE_REMOTE_ENV_KEY,
     DEFAULT_APP_DIR,
@@ -35,7 +36,6 @@ from scripts.deploy.remote_target import (  # noqa: E402
     DEFAULT_SERVICE_NAME,
     build_remote_receipt,
     copy_file_to_remote,
-    read_boomerang_api_key,
     shell_env_assignments,
     ssh_command_for_operation,
     write_json,
@@ -77,6 +77,8 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser.add_argument("--image", default=DEFAULT_IMAGE)
     parser.add_argument("--public-base-url", help="Canonical public base URL")
     parser.add_argument("--public-port", type=int, default=DEFAULT_PUBLIC_PORT)
+    parser.add_argument("--mpulse-registry-file", type=Path)
+    parser.add_argument("--mpulse-profile")
     return parser.parse_args(argv)
 
 
@@ -228,13 +230,16 @@ def provision_or_inspect_instance(
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parse_args(argv)
+    if bool(args.mpulse_registry_file) != bool(args.mpulse_profile):
+        raise SystemExit("--mpulse-registry-file and --mpulse-profile must be supplied together.")
+    if args.mpulse_registry_file and not (args.public_base_url or "").startswith("https://"):
+        raise SystemExit("mPulse host initialization requires an explicit HTTPS --public-base-url.")
     env_file = Path(args.env_file).expanduser().resolve()
     receipt_output = Path(args.receipt_output).expanduser().resolve()
     remote_receipts_dir = Path(args.remote_receipts_dir).expanduser().resolve()
     ensure_env_file(env_file)
 
     token = resolve_linode_token(args, env_file)
-    boomerang_api_key = read_boomerang_api_key(env_file)
     private_key_path, public_key_path, public_key = ensure_ssh_keypair(Path(args.ssh_private_key_file))
 
     client = LinodeApiClient(token)
@@ -269,7 +274,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         archive_path, metadata_path, metadata = build_release_bundle(
             repo_root=REPO_ROOT,
             work_dir=work_dir,
-            boomerang_api_key=boomerang_api_key,
         )
         bootstrap_path = write_remote_bootstrap_script(work_dir)
         copy_file_to_remote(transient_receipt, archive_path, DEFAULT_REMOTE_RELEASE_ARCHIVE_PATH)
@@ -277,6 +281,18 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         copy_file_to_remote(transient_receipt, bootstrap_path, DEFAULT_REMOTE_BOOTSTRAP_PATH)
         if run_remote_bootstrap(transient_receipt, public_port=args.public_port) != 0:
             raise SystemExit("Remote bootstrap failed; inspect the Linode journal for virtual-space-trotting.")
+        if args.mpulse_registry_file:
+            try:
+                mpulse_archive = build_setup_archive(
+                    work_dir=work_dir,
+                    registry_file=args.mpulse_registry_file,
+                    initial_profile=args.mpulse_profile,
+                    remote_receipt=transient_receipt,
+                )
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from exc
+            if run_remote_install(transient_receipt, mpulse_archive) != 0:
+                raise SystemExit("Remote mPulse administration setup failed.")
 
     deployed_at = utc_now_iso()
     commit = str(metadata.get("commit") or "")

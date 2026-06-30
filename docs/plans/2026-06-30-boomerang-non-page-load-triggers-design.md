@@ -42,7 +42,7 @@ Concurrent XHR and Fetch requests form one batch. A batch is reported only when 
 
 ## Acceptance Criteria
 
-1. Without `BOOMERANG_API_KEY`, the generated page remains inert.
+1. Without a valid host-provided mPulse profile, the generated page remains inert.
 2. First input emits at most one custom beacon and never duplicates pre-page-load FID collection.
 3. Concurrent consequential requests emit one XHR beacon; background and excluded requests emit none.
 4. Errors are deduplicated, capped at ten, throttled to one send per second, and still propagate normally.

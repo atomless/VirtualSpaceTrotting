@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -183,10 +184,7 @@ class RemoteTargetTests(unittest.TestCase):
         self.assertEqual(receipt["deploy"]["health_path"], "/health")
 
     def test_update_uploads_bundle_runs_install_and_refreshes_metadata(self) -> None:
-        self.env_file.write_text(
-            "VST_ACTIVE_REMOTE=prod\nBOOMERANG_API_KEY=ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\n",
-            encoding="utf-8",
-        )
+        self.env_file.write_text("VST_ACTIVE_REMOTE=prod\n", encoding="utf-8")
         bundle_dir = self.temp_dir / "bundle"
         bundle_dir.mkdir()
         archive_path = bundle_dir / "release.tar.gz"
@@ -206,7 +204,9 @@ class RemoteTargetTests(unittest.TestCase):
             remote_target, "run_remote_update_install", return_value=0
         ) as run_install, patch.object(
             remote_target, "run_remote_health_check", return_value=0
-        ) as run_health:
+        ) as run_health, patch.object(
+            remote_target, "run_remote_mpulse_verify", return_value=0
+        ) as run_mpulse_verify:
             rc = remote_target.main(
                 [
                     "--env-file",
@@ -228,12 +228,16 @@ class RemoteTargetTests(unittest.TestCase):
         )
         run_install.assert_called_once()
         run_health.assert_called_once()
+        run_mpulse_verify.assert_called_once()
         receipt = json.loads(self.receipt_path.read_text(encoding="utf-8"))
         self.assertEqual(receipt["metadata"]["last_deployed_commit"], "deadbeef")
         self.assertTrue(receipt["metadata"]["last_deployed_at_utc"].endswith("Z"))
 
-    def test_update_can_build_release_without_boomerang_api_key(self) -> None:
-        self.env_file.write_text("VST_ACTIVE_REMOTE=prod\n", encoding="utf-8")
+    def test_update_build_is_tenant_neutral_even_with_legacy_key_values(self) -> None:
+        self.env_file.write_text(
+            "VST_ACTIVE_REMOTE=prod\nBOOMERANG_API_KEY=ENV-FILE-KEY\n",
+            encoding="utf-8",
+        )
         bundle_dir = self.temp_dir / "bundle-no-boomerang"
         bundle_dir.mkdir()
         archive_path = bundle_dir / "release.tar.gz"
@@ -243,7 +247,7 @@ class RemoteTargetTests(unittest.TestCase):
         update_script_path = bundle_dir / "remote-update.sh"
         update_script_path.write_text("#!/bin/sh\n", encoding="utf-8")
 
-        with patch.object(
+        with patch.dict(os.environ, {"BOOMERANG_API_KEY": "PROCESS-ENV-KEY"}), patch.object(
             remote_target,
             "build_release_bundle",
             return_value=(archive_path, metadata_path, {"commit": "deadbeef"}),
@@ -255,6 +259,8 @@ class RemoteTargetTests(unittest.TestCase):
             remote_target, "run_remote_update_install", return_value=0
         ), patch.object(
             remote_target, "run_remote_health_check", return_value=0
+        ), patch.object(
+            remote_target, "run_remote_mpulse_verify", return_value=0
         ):
             rc = remote_target.main(
                 [
@@ -267,47 +273,7 @@ class RemoteTargetTests(unittest.TestCase):
             )
 
         self.assertEqual(rc, 0)
-        self.assertIsNone(build_release.call_args.kwargs["boomerang_api_key"])
-
-    def test_update_process_env_boomerang_api_key_overrides_env_file(self) -> None:
-        self.env_file.write_text(
-            "VST_ACTIVE_REMOTE=prod\nBOOMERANG_API_KEY=ENV-FILE-KEY\n",
-            encoding="utf-8",
-        )
-        bundle_dir = self.temp_dir / "bundle-process-env"
-        bundle_dir.mkdir()
-        archive_path = bundle_dir / "release.tar.gz"
-        archive_path.write_text("bundle\n", encoding="utf-8")
-        metadata_path = bundle_dir / "release.json"
-        metadata_path.write_text(json.dumps({"commit": "deadbeef", "dirty_worktree": False}) + "\n", encoding="utf-8")
-        update_script_path = bundle_dir / "remote-update.sh"
-        update_script_path.write_text("#!/bin/sh\n", encoding="utf-8")
-
-        with patch.dict(remote_target.os.environ, {"BOOMERANG_API_KEY": "PROCESS-ENV-KEY"}), patch.object(
-            remote_target,
-            "build_release_bundle",
-            return_value=(archive_path, metadata_path, {"commit": "deadbeef"}),
-        ) as build_release, patch.object(
-            remote_target, "write_remote_update_script", return_value=update_script_path
-        ), patch.object(
-            remote_target, "copy_file_to_remote"
-        ), patch.object(
-            remote_target, "run_remote_update_install", return_value=0
-        ), patch.object(
-            remote_target, "run_remote_health_check", return_value=0
-        ):
-            rc = remote_target.main(
-                [
-                    "--env-file",
-                    str(self.env_file),
-                    "--receipts-dir",
-                    str(self.receipts_dir),
-                    "update",
-                ]
-            )
-
-        self.assertEqual(rc, 0)
-        self.assertEqual(build_release.call_args.kwargs["boomerang_api_key"], "PROCESS-ENV-KEY")
+        self.assertNotIn("boomerang_api_key", build_release.call_args.kwargs)
 
     def test_remote_update_script_can_swap_opt_app_directory(self) -> None:
         script_path = remote_target.write_remote_update_script(self.temp_dir)
@@ -317,6 +283,20 @@ class RemoteTargetTests(unittest.TestCase):
         self.assertIn("sudo mv \"${REMOTE_APP_DIR}\" \"${PREV_APP_DIR}\"", script)
         self.assertIn("sudo mv \"${NEXT_APP_DIR}\" \"${REMOTE_APP_DIR}\"", script)
         self.assertIn("sudo chown -R \"$(id -u):$(id -g)\" \"${REMOTE_APP_DIR}\"", script)
+        self.assertIn("flock -n /run/lock/vst-mpulse.lock", script)
+        self.assertIn("VST_UPDATE_LOCKED=1", script)
+        self.assertNotIn("/etc/opt", script)
+        self.assertNotIn("/var/opt", script)
+
+    @patch("scripts.deploy.remote_target.subprocess.run")
+    def test_remote_update_rollback_uses_mPulse_mutation_lock(self, run) -> None:
+        run.return_value.returncode = 0
+        receipt = remote_target.load_remote_receipt(self.receipts_dir, "prod")
+
+        result = remote_target.rollback_remote_update(receipt)
+
+        self.assertEqual(result, 0)
+        self.assertIn("flock -n /run/lock/vst-mpulse.lock", run.call_args.args[0][-1])
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@
 
 This note records the mPulse Boomerang capabilities used by VirtualSpaceTrotting, the beacons the site can emit, and the extensions that remain possible. It is intentionally limited to measurements relevant to this static multi-page site.
 
-The Boomerang build is selected by `BOOMERANG_API_KEY` and delivered by the configured mPulse tenant. Its plugin set can change independently of this repository. The site therefore prefers official plugins when present and installs only focused fallbacks for required behavior.
+The Boomerang build is selected by the active host-managed mPulse profile, which pairs a script base URL with its API key. Its plugin set can change independently of this repository. The site therefore prefers official plugins when present and installs only focused fallbacks for required behavior.
 
 ## Plugin Inventory
 
@@ -50,7 +50,7 @@ The head bootstrap captures the first input and up to ten errors before the main
 | Custom unload | A non-BFCache page exit when at least one metric is available | `http.initiator=api_custom_unload` plus available `c.cls`, `et.fid`, and `et.inp`. |
 | BFCache | Restoration from the browser's back-forward cache | `http.initiator=bfcache`, restored URL, timestamp, and persisted state. |
 
-All site-added instrumentation remains inert when `BOOMERANG_API_KEY` is empty.
+All site-added instrumentation remains inert when `/mpulse-config.js` contains no valid active profile.
 
 ## Relevant Extensions
 
@@ -69,4 +69,4 @@ These are possible extensions, not current behavior:
 - No artificial requests or interactions should be introduced solely to manufacture additional beacons.
 - The site never posts directly to the collector; custom behavior uses public `BOOMR` APIs.
 
-After changing the API key or tenant configuration, verify the delivered plugin set and inspect representative page-load, interaction, error, unload, and BFCache beacons. Do not assume that a plugin available to one tenant is available to another.
+After switching a profile or changing tenant configuration, run `vst-mpulse verify`, verify the delivered plugin set, and inspect representative page-load, interaction, error, unload, and BFCache beacons. Do not assume that a plugin available to one tenant is available to another.

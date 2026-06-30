@@ -1,5 +1,4 @@
 import json
-import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -93,7 +92,7 @@ class LinodeOneShotTests(unittest.TestCase):
         self.assertIn("ExecStart=/usr/local/bin/spin up --listen 0.0.0.0:${REMOTE_PUBLIC_PORT}", script)
         self.assertIn("http://127.0.0.1:${REMOTE_PUBLIC_PORT}/health", script)
 
-    def test_deploy_can_build_release_without_boomerang_api_key(self) -> None:
+    def test_deploy_build_is_tenant_neutral(self) -> None:
         client = FakeLinodeClient("linode-secret")
 
         with patch.object(deploy, "LinodeApiClient", return_value=client), patch.object(
@@ -133,60 +132,23 @@ class LinodeOneShotTests(unittest.TestCase):
             )
 
         self.assertEqual(rc, 0)
-        self.assertIsNone(build_release.call_args.kwargs["boomerang_api_key"])
+        self.assertNotIn("boomerang_api_key", build_release.call_args.kwargs)
 
-    def test_deploy_process_env_boomerang_api_key_overrides_env_file(self) -> None:
-        self.env_file.write_text(
-            "BOOMERANG_API_KEY=ENV-FILE-KEY\n",
-            encoding="utf-8",
-        )
-        client = FakeLinodeClient("linode-secret")
-
-        with patch.dict(os.environ, {"BOOMERANG_API_KEY": "PROCESS-ENV-KEY"}), patch.object(
-            deploy, "LinodeApiClient", return_value=client
-        ), patch.object(
-            deploy,
-            "ensure_ssh_keypair",
-            return_value=(
-                Path("/Users/test/.ssh/virtual-space-trotting-linode"),
-                Path("/Users/test/.ssh/virtual-space-trotting-linode.pub"),
-                "ssh-ed25519 AAAATEST virtual-space-trotting-linode",
-            ),
-        ), patch.object(
-            deploy, "wait_for_ssh_ready", return_value=None
-        ), patch.object(
-            deploy,
-            "build_release_bundle",
-            return_value=(self.archive_path, self.metadata_path, {"commit": "deadbeef", "dirty_worktree": False}),
-        ) as build_release, patch.object(
-            deploy, "write_remote_bootstrap_script", return_value=self.bootstrap_path
-        ), patch.object(
-            deploy, "copy_file_to_remote"
-        ), patch.object(
-            deploy, "run_remote_bootstrap", return_value=0
-        ):
-            rc = deploy.main(
+    def test_mPulse_initialization_requires_registry_and_profile_together(self) -> None:
+        with self.assertRaisesRegex(SystemExit, "must be supplied together"):
+            deploy.main(
                 [
                     "--linode-token",
                     "linode-secret",
                     "--env-file",
                     str(self.env_file),
-                    "--receipt-output",
-                    str(self.receipt_path),
-                    "--remote-name",
-                    "prod",
-                    "--remote-receipts-dir",
-                    str(self.remote_receipts_dir),
-                    "--label",
-                    "vst-test",
+                    "--mpulse-registry-file",
+                    str(self.temp_dir / "profiles.json"),
                 ]
             )
 
-        self.assertEqual(rc, 0)
-        self.assertEqual(build_release.call_args.kwargs["boomerang_api_key"], "PROCESS-ENV-KEY")
-
     def test_fresh_deploy_creates_instance_uploads_release_and_writes_receipts(self) -> None:
-        self.env_file.write_text("BOOMERANG_API_KEY=ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\n", encoding="utf-8")
+        self.env_file.write_text("", encoding="utf-8")
         client = FakeLinodeClient("linode-secret")
 
         with patch.object(deploy, "LinodeApiClient", return_value=client), patch.object(
@@ -251,7 +213,7 @@ class LinodeOneShotTests(unittest.TestCase):
 
     def test_existing_instance_can_override_public_base_url(self) -> None:
         self.env_file.write_text(
-            "LINODE_TOKEN=stored-token\nBOOMERANG_API_KEY=ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\n",
+            "LINODE_TOKEN=stored-token\n",
             encoding="utf-8",
         )
         client = FakeLinodeClient("stored-token")
@@ -296,6 +258,53 @@ class LinodeOneShotTests(unittest.TestCase):
         self.assertIn(("get_instance", 456), client.calls)
         remote_receipt = json.loads((self.remote_receipts_dir / "prod.json").read_text(encoding="utf-8"))
         self.assertEqual(remote_receipt["runtime"]["public_base_url"], "https://imaginary.example.com")
+
+    def test_explicit_mPulse_registry_initializes_host_after_deploy(self) -> None:
+        self.env_file.write_text("LINODE_TOKEN=stored-token\n", encoding="utf-8")
+        registry_path = self.temp_dir / "profiles.json"
+        registry_path.write_text("{}\n", encoding="utf-8")
+        setup_archive = self.temp_dir / "mpulse-setup.tar.gz"
+        setup_archive.write_text("setup\n", encoding="utf-8")
+        client = FakeLinodeClient("stored-token")
+
+        with patch.object(deploy, "LinodeApiClient", return_value=client), patch.object(
+            deploy,
+            "ensure_ssh_keypair",
+            return_value=(Path("/tmp/key"), Path("/tmp/key.pub"), "ssh-ed25519 AAAATEST"),
+        ), patch.object(deploy, "wait_for_ssh_ready"), patch.object(
+            deploy,
+            "build_release_bundle",
+            return_value=(self.archive_path, self.metadata_path, {"commit": "deadbeef", "dirty_worktree": False}),
+        ), patch.object(deploy, "write_remote_bootstrap_script", return_value=self.bootstrap_path), patch.object(
+            deploy, "copy_file_to_remote"
+        ), patch.object(deploy, "run_remote_bootstrap", return_value=0), patch.object(
+            deploy, "build_setup_archive", return_value=setup_archive
+        ) as build_mpulse_setup, patch.object(
+            deploy, "run_remote_install", return_value=0
+        ) as run_mpulse_install:
+            rc = deploy.main(
+                [
+                    "--env-file",
+                    str(self.env_file),
+                    "--receipt-output",
+                    str(self.receipt_path),
+                    "--remote-receipts-dir",
+                    str(self.remote_receipts_dir),
+                    "--existing-instance-id",
+                    "456",
+                    "--public-base-url",
+                    "https://imaginary.example.com",
+                    "--mpulse-registry-file",
+                    str(registry_path),
+                    "--mpulse-profile",
+                    "dev-alma",
+                ]
+            )
+
+        self.assertEqual(rc, 0)
+        self.assertEqual(build_mpulse_setup.call_args.kwargs["registry_file"], registry_path)
+        self.assertEqual(build_mpulse_setup.call_args.kwargs["initial_profile"], "dev-alma")
+        run_mpulse_install.assert_called_once_with(unittest.mock.ANY, setup_archive)
 
 
 if __name__ == "__main__":

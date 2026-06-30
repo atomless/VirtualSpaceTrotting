@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import ipaddress
 import json
-import os
 import re
 import shlex
 import shutil
@@ -28,7 +27,6 @@ DEFAULT_DURABLE_STATE_DIR = REPO_ROOT / ".vst"
 DEFAULT_REMOTE_RECEIPTS_DIR = DEFAULT_DURABLE_STATE_DIR / "remotes"
 REMOTE_RECEIPT_SCHEMA = "virtual_space_trotting.remote_target.v1"
 ACTIVE_REMOTE_ENV_KEY = "VST_ACTIVE_REMOTE"
-BOOMERANG_API_KEY_ENV_KEY = "BOOMERANG_API_KEY"
 DEFAULT_BACKEND_KIND = "ssh_systemd"
 DEFAULT_APP_DIR = "/opt/virtual-space-trotting"
 DEFAULT_SERVICE_NAME = "virtual-space-trotting"
@@ -44,20 +42,6 @@ REMOTE_HEALTH_RETRY_DELAY_SECONDS = 2
 
 def fail(message: str) -> None:
     raise SystemExit(message)
-
-
-def read_boomerang_api_key(env_file: Path) -> Optional[str]:
-    value = os.environ.get(BOOMERANG_API_KEY_ENV_KEY, "").strip() or read_env_value(
-        env_file,
-        BOOMERANG_API_KEY_ENV_KEY,
-    ).strip()
-    if not value:
-        return None
-    if any(character.isspace() for character in value):
-        fail(f"{BOOMERANG_API_KEY_ENV_KEY} cannot contain whitespace.")
-    if not re.fullmatch(r"[A-Za-z0-9-]+", value):
-        fail(f"{BOOMERANG_API_KEY_ENV_KEY} can contain only letters, numbers, and hyphens.")
-    return value
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -309,13 +293,9 @@ def build_release_bundle(
     *,
     repo_root: Path,
     work_dir: Path,
-    boomerang_api_key: Optional[str] = None,
 ) -> tuple[Path, Path, dict[str, Any]]:
     archive_path = work_dir / "vst-release.tar.gz"
     metadata_path = work_dir / "vst-release.json"
-    env = None
-    if boomerang_api_key:
-        env = {**os.environ, BOOMERANG_API_KEY_ENV_KEY: boomerang_api_key}
     result = subprocess.run(
         [
             "python3",
@@ -328,7 +308,6 @@ def build_release_bundle(
             str(metadata_path),
         ],
         cwd=str(repo_root),
-        env=env,
         capture_output=True,
         text=True,
         check=False,
@@ -356,6 +335,17 @@ set -euo pipefail
 : "${REMOTE_SERVICE_NAME:?missing REMOTE_SERVICE_NAME}"
 : "${RELEASE_ARCHIVE_PATH:?missing RELEASE_ARCHIVE_PATH}"
 : "${RELEASE_METADATA_PATH:?missing RELEASE_METADATA_PATH}"
+
+if [[ -x /usr/local/lib/virtual-space-trotting/vst-mpulse-admin && "${VST_UPDATE_LOCKED:-0}" != "1" ]]; then
+  exec sudo flock -n /run/lock/vst-mpulse.lock \
+    sudo -u "$(id -un)" env \
+      VST_UPDATE_LOCKED=1 \
+      REMOTE_APP_DIR="${REMOTE_APP_DIR}" \
+      REMOTE_SERVICE_NAME="${REMOTE_SERVICE_NAME}" \
+      RELEASE_ARCHIVE_PATH="${RELEASE_ARCHIVE_PATH}" \
+      RELEASE_METADATA_PATH="${RELEASE_METADATA_PATH}" \
+      bash "$0"
+fi
 
 NEXT_APP_DIR="${REMOTE_APP_DIR}.next"
 PREV_APP_DIR="${REMOTE_APP_DIR}.prev"
@@ -439,7 +429,15 @@ fi
 mv "${{REMOTE_APP_DIR}}.prev" "${{REMOTE_APP_DIR}}"
 sudo systemctl start "${{REMOTE_SERVICE_NAME}}"
 """
-    return run_ssh_operation(receipt, f"bash -c {shlex.quote(shell_script)}")
+    operation = f"bash -c {shlex.quote(shell_script)}"
+    guarded_operation = f"""
+set -euo pipefail
+if [[ -x /usr/local/lib/virtual-space-trotting/vst-mpulse-admin ]]; then
+  exec sudo flock -n /run/lock/vst-mpulse.lock {operation}
+fi
+exec {operation}
+"""
+    return run_ssh_operation(receipt, f"bash -c {shlex.quote(guarded_operation)}")
 
 
 def run_remote_health_check(receipt: dict[str, Any]) -> int:
@@ -473,6 +471,25 @@ test "${{status}}" = "200"
     return 1
 
 
+def run_remote_mpulse_verify(receipt: dict[str, Any]) -> int:
+    shell_script = """
+set -euo pipefail
+if command -v vst-mpulse >/dev/null 2>&1; then
+  vst-mpulse verify
+fi
+"""
+    result = subprocess.run(
+        ssh_command_for_operation(receipt, f"bash -c {shlex.quote(shell_script)}"),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        message = (result.stderr or result.stdout or "remote mPulse verification failed").strip()
+        print(f"Remote mPulse verification failed: {message}", file=sys.stderr)
+    return int(result.returncode)
+
+
 def refresh_remote_receipt_metadata(
     receipts_dir: Path,
     name: str,
@@ -487,13 +504,11 @@ def refresh_remote_receipt_metadata(
 
 
 def perform_remote_update(receipt: dict[str, Any], receipts_dir: Path, *, env_file: Path) -> int:
-    boomerang_api_key = read_boomerang_api_key(env_file)
     with tempfile.TemporaryDirectory(prefix="vst-remote-update-") as temp_dir:
         work_dir = Path(temp_dir)
         archive_path, metadata_path, metadata = build_release_bundle(
             repo_root=REPO_ROOT,
             work_dir=work_dir,
-            boomerang_api_key=boomerang_api_key,
         )
         update_script_path = write_remote_update_script(work_dir)
         copy_file_to_remote(receipt, archive_path, REMOTE_UPDATE_ARCHIVE_PATH)
@@ -506,6 +521,11 @@ def perform_remote_update(receipt: dict[str, Any], receipts_dir: Path, *, env_fi
             if rollback_result == 0:
                 fail("Remote health failed after update; rollback attempted.")
             fail("Remote health failed after update, and rollback also failed.")
+        if run_remote_mpulse_verify(receipt) != 0:
+            rollback_result = rollback_remote_update(receipt)
+            if rollback_result == 0:
+                fail("Remote mPulse verification failed after update; rollback attempted.")
+            fail("Remote mPulse verification failed after update, and rollback also failed.")
         refresh_remote_receipt_metadata(
             receipts_dir,
             receipt["identity"]["name"],

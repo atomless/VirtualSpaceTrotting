@@ -18,6 +18,67 @@
       window.BOOMR_API_key = "%sveltekit.env.BOOMERANG_API_KEY%";
     </script>
     <script>
+      (function captureEarlyBoomerangEvents() {
+        if (!window.BOOMR_API_key) return;
+
+        var inputEvents = ["click", "mousedown", "keydown", "touchstart", "pointerdown"];
+        var state = { errors: [], firstInput: null };
+        window.BOOMR_EARLY_STATE = state;
+
+        function dispatchFirstInput() {
+          var event;
+          if (typeof CustomEvent === "function") {
+            event = new CustomEvent("vst:boomerang-first-input", { detail: state.firstInput });
+          } else {
+            event = document.createEvent("CustomEvent");
+            event.initCustomEvent("vst:boomerang-first-input", false, false, state.firstInput);
+          }
+          window.dispatchEvent(event);
+        }
+
+        function stopInputCapture() {
+          for (var index = 0; index < inputEvents.length; index += 1) {
+            window.removeEventListener(inputEvents[index], captureFirstInput, true);
+          }
+        }
+
+        function captureFirstInput(event) {
+          if (state.firstInput) return;
+          var now = window.performance && window.performance.now
+            ? window.performance.now()
+            : new Date().getTime();
+          state.firstInput = {
+            delay: Math.max(0, Math.ceil(now - event.timeStamp)),
+            timeStamp: event.timeStamp,
+            type: event.type
+          };
+          stopInputCapture();
+          dispatchFirstInput();
+        }
+
+        function captureError(event) {
+          if (state.errors.length >= 10) return;
+          state.errors.push({ message: String(event.error || event.message), source: "window.error" });
+        }
+
+        function captureRejection(event) {
+          if (state.errors.length >= 10) return;
+          state.errors.push({ message: String(event.reason), source: "unhandledrejection" });
+        }
+
+        for (var index = 0; index < inputEvents.length; index += 1) {
+          window.addEventListener(inputEvents[index], captureFirstInput, { capture: true, passive: true });
+        }
+        window.addEventListener("error", captureError);
+        window.addEventListener("unhandledrejection", captureRejection);
+
+        state.stopErrorCapture = function stopErrorCapture() {
+          window.removeEventListener("error", captureError);
+          window.removeEventListener("unhandledrejection", captureRejection);
+        };
+      })();
+    </script>
+    <script>
       (function initBoomerang() {
         var apiKey = "%sveltekit.env.BOOMERANG_API_KEY%";
         if (!apiKey) return;
@@ -37,6 +98,17 @@
         var promoted = false;
         var loaderTimeout = 3000;
 
+        function notifyBoomerangReady() {
+          var event;
+          if (typeof Event === "function") {
+            event = new Event("vst:boomerang-ready");
+          } else {
+            event = document.createEvent("Event");
+            event.initEvent("vst:boomerang-ready", false, false);
+          }
+          window.dispatchEvent(event);
+        }
+
         function promote() {
           if (promoted) return;
 
@@ -44,6 +116,7 @@
           script.id = "boomr-scr-as";
           script.src = window.BOOMR.url;
           script.async = true;
+          script.addEventListener("load", notifyBoomerangReady);
           parentNode.appendChild(script);
           promoted = true;
         }
@@ -61,6 +134,7 @@
             var script = doc.createElement("script");
             script.id = scriptId || "boomr-if-as";
             script.src = window.BOOMR.url;
+            script.addEventListener("load", notifyBoomerangReady);
             BOOMR_lstart = new Date().getTime();
             (parent || doc.body).appendChild(script);
           }

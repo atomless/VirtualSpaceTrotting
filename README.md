@@ -103,6 +103,22 @@ The committed page template already contains this pattern:
 
 `BOOMERANG_API_KEY` is substituted at build time when present. The page uses Akamai's documented non-blocking loader snippet version 14 and appends the key to the paired `rum-dev-alma-dct-collector.soasta.com/boomerang/` source. A non-empty process environment value takes precedence over `.env.local`, so deployment engineers can temporarily supply another key with `BOOMERANG_API_KEY=... make remote-update`. Without a key, the committed snippet stays inert and deployments still proceed.
 
+### Non-Page-Load Beacons
+
+When an API key is present, the site also reproduces the consequential non-page-load triggers used by the reference site:
+
+| Trigger | Beacon behavior |
+| --- | --- |
+| First click, pointer, touch, or key input | Sends one custom first-input beacon after the page-load beacon. |
+| XHR or Fetch work that changes the rendered page | Groups concurrent requests and sends one `xhr` response beacon. Background requests with no relevant DOM mutation are ignored. |
+| Uncaught errors, unhandled promise rejections, console errors, and browser reports | Deduplicates and batches up to ten fallback error reports. |
+| Leaving a page | Sends one unload-safe beacon when CLS, FID, or INP data is available. A page entering the back-forward cache is not treated as an unload. |
+| Restoring a page from the back-forward cache | Sends a `bfcache` response beacon when the tenant's Boomerang build does not already provide the BFCache plugin. |
+
+The instrumentation checks the Boomerang build delivered for the configured mPulse tenant. Official `AutoXHR`, `Errors`, and `BFCache` plugins take precedence; the site's corresponding fallback is installed only when that plugin is absent. mPulse loader, configuration, collector, and Akamai mapping requests are always excluded from request instrumentation. Removing `BOOMERANG_API_KEY` leaves both the loader and these listeners inert.
+
+See [Boomerang instrumentation](docs/boomerang-instrumentation.md) for the plugin inventory, emitted beacon catalogue, deliberate exclusions, and possible extensions.
+
 ## Current Status
 
 The repository has been initialized with:

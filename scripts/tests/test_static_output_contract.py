@@ -4,6 +4,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 ROOT_LAYOUT = REPO_ROOT / "site" / "src" / "routes" / "+layout.js"
+ROOT_LAYOUT_SVELTE = REPO_ROOT / "site" / "src" / "routes" / "+layout.svelte"
 APP_TEMPLATE = REPO_ROOT / "site" / "src" / "app.html"
 SVELTE_CONFIG = REPO_ROOT / "site" / "svelte.config.js"
 PNPM_WORKSPACE = REPO_ROOT / "site" / "pnpm-workspace.yaml"
@@ -88,6 +89,16 @@ class StaticOutputContractTests(unittest.TestCase):
         self.assertIn('link.rel = "preload"', template)
         self.assertIn("iframeLoader(true)", template)
         self.assertNotIn("https://c.go-mpulse.net/boomerang/", template)
+
+    def test_boomerang_non_page_load_instrumentation_is_bootstrapped(self) -> None:
+        template = APP_TEMPLATE.read_text(encoding="utf-8")
+        layout = ROOT_LAYOUT_SVELTE.read_text(encoding="utf-8")
+
+        self.assertIn("window.BOOMR_EARLY_STATE", template)
+        self.assertIn('"vst:boomerang-first-input"', template)
+        self.assertIn('"vst:boomerang-ready"', template)
+        self.assertIn("installBoomerangInstrumentation", layout)
+        self.assertIn("onMount", layout)
 
     def test_boomerang_env_key_is_public_without_exposing_linode_token(self) -> None:
         config = SVELTE_CONFIG.read_text(encoding="utf-8")

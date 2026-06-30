@@ -1,5 +1,10 @@
 <script>
+  import { onMount } from 'svelte';
+
   import '../app.css';
+  import { installBoomerangInstrumentation } from '$lib/boomerang-instrumentation.js';
+
+  onMount(() => installBoomerangInstrumentation(window));
 </script>
 
 <header class="site-header">

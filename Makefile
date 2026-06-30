@@ -1,4 +1,4 @@
-.PHONY: help setup test test-unit test-runtime test-code-quality content-corpus preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
+.PHONY: help setup test test-unit test-site test-runtime test-code-quality content-corpus preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
 
 .DEFAULT_GOAL := help
 
@@ -31,10 +31,13 @@ setup:
 	pnpm --dir site install
 	@printf '%s\n' 'Local state prepared.'
 
-test: test-unit test-runtime
+test: test-unit test-site test-runtime
 
 test-unit:
 	$(PYTHON) -m unittest discover -s scripts/tests -p 'test_*.py'
+
+test-site:
+	pnpm --dir site test
 
 test-runtime:
 	cargo test

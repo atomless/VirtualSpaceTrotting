@@ -1,4 +1,4 @@
-.PHONY: help setup test test-unit test-site test-runtime test-code-quality test-mpulse-profiles test-mpulse-admin content-corpus preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
+.PHONY: help setup test test-unit test-site test-runtime test-code-quality test-mpulse-profiles test-mpulse-admin test-mpulse-cli content-corpus preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
 
 .DEFAULT_GOAL := help
 
@@ -50,6 +50,9 @@ test-mpulse-profiles:
 
 test-mpulse-admin:
 	$(PYTHON) -m unittest scripts.tests.test_vst_mpulse_admin -v
+
+test-mpulse-cli:
+	$(PYTHON) -m unittest scripts.tests.test_vst_mpulse -v
 
 content-corpus:
 	$(PYTHON) scripts/generate_location_corpus.py

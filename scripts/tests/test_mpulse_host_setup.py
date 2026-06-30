@@ -86,6 +86,7 @@ class MPulseHostSetupTests(unittest.TestCase):
         self.assertIn("install -o root -g root -m 0755", script)
         self.assertIn("/usr/local/bin/vst-mpulse", script)
         self.assertIn("/usr/local/lib/virtual-space-trotting/vst-mpulse-admin", script)
+        self.assertIn("/usr/local/lib/virtual-space-trotting/vst_mpulse_admin.py", script)
         self.assertIn("/usr/local/lib/virtual-space-trotting/mpulse_profiles.py", script)
         self.assertIn("install -o root -g root -m 0440", script)
         self.assertIn("visudo -cf", script)

@@ -110,6 +110,7 @@ usermod -a -G {OPERATOR_GROUP} {user}
 install -d -o root -g root -m 0755 /usr/local/lib/virtual-space-trotting
 install -o root -g root -m 0755 "${{PAYLOAD_DIR}}/vst-mpulse" /usr/local/bin/vst-mpulse
 install -o root -g root -m 0755 "${{PAYLOAD_DIR}}/vst-mpulse-admin" /usr/local/lib/virtual-space-trotting/vst-mpulse-admin
+install -o root -g root -m 0644 "${{PAYLOAD_DIR}}/vst_mpulse_admin.py" /usr/local/lib/virtual-space-trotting/vst_mpulse_admin.py
 install -o root -g root -m 0644 "${{PAYLOAD_DIR}}/mpulse_profiles.py" /usr/local/lib/virtual-space-trotting/mpulse_profiles.py
 
 install -o root -g root -m 0644 "${{PAYLOAD_DIR}}/vst-mpulse-tmpfiles.conf" /etc/tmpfiles.d/vst-mpulse.conf
@@ -190,6 +191,7 @@ def build_setup_archive(
     source_files = {
         "vst-mpulse": REPO_ROOT / "scripts" / "deploy" / "vst_mpulse.py",
         "vst-mpulse-admin": REPO_ROOT / "scripts" / "deploy" / "vst_mpulse_admin.py",
+        "vst_mpulse_admin.py": REPO_ROOT / "scripts" / "deploy" / "vst_mpulse_admin.py",
         "mpulse_profiles.py": REPO_ROOT / "scripts" / "mpulse_profiles.py",
         "vst-mpulse-tmpfiles.conf": TEMPLATES_DIR / "vst-mpulse-tmpfiles.conf",
         "vst-mpulse-sudoers": TEMPLATES_DIR / "vst-mpulse-sudoers",

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://virtual-space-trotting.invalid/schemas/mpulse-profiles.v1.json",
+  "title": "VirtualSpaceTrotting mPulse profiles",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "profiles"],
+  "properties": {
+    "schema": {
+      "const": "virtual-space-trotting.mpulse-profiles.v1"
+    },
+    "profiles": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["description", "script_base_url", "api_key"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "script_base_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://.+/boomerang/$"
+          },
+          "api_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{5}(?:-[A-Za-z0-9]{5}){4}$"
+          }
+        }
+      }
+    }
+  }
+}

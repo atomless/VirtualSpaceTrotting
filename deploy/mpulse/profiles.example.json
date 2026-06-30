@@ -1,0 +1,10 @@
+{
+  "schema": "virtual-space-trotting.mpulse-profiles.v1",
+  "profiles": {
+    "example": {
+      "description": "Example profile only",
+      "script_base_url": "https://collector.example.com/boomerang/",
+      "api_key": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+    }
+  }
+}

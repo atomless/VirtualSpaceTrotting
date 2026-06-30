@@ -13,6 +13,7 @@ References:
 - [Akamai mPulse origin setup](https://techdocs.akamai.com/mpulse/docs/set-up-behavior-options)
 - [Akamai Boomerang implementation guide](https://techdocs.akamai.com/mpulse-boomerang/docs/implementation)
 - [Akamai mPulse key concepts](https://techdocs.akamai.com/mpulse/docs/key-concepts-terms)
+- [Current project status](docs/status/README.md)
 
 ## Setup And Deploy
 
@@ -194,19 +195,6 @@ When a valid host profile is active, the site also reproduces the consequential 
 The instrumentation checks the Boomerang build delivered for the active mPulse profile. Official `AutoXHR`, `Errors`, and `BFCache` plugins take precedence; the site's corresponding fallback is installed only when that plugin is absent. mPulse loader, configuration, collector, and Akamai mapping requests are always excluded from request instrumentation. A missing or malformed host profile leaves both the loader and these listeners inert.
 
 See [Boomerang instrumentation](docs/boomerang-instrumentation.md) for the plugin inventory, emitted beacon catalogue, deliberate exclusions, and possible extensions.
-
-## Current Status
-
-The repository has been initialized with:
-
-- project governance tailored to this repository,
-- lean Linode setup and remote-update helper patterns,
-- test coverage for the helper layer,
-- Makefile targets for setup, verification, and remote operations.
-- a SvelteKit static site with semantic browsing routes,
-- deterministic fictional preview imagery and provenance metadata,
-- a Rust Spin health component and static-file serving manifest,
-- a first-run Linode deploy helper that installs Spin as a systemd service.
 
 ## Local Commands
 

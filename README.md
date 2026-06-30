@@ -134,7 +134,22 @@ If activation or public verification fails, the helper automatically restores th
 
 ### Add or Edit Profiles
 
-The authoritative profile registry lives on the Linode. To add a profile or change an existing endpoint/key pair, connect over SSH and run:
+The authoritative profile registry lives on the Linode. Each named profile pairs one Boomerang script base URL with its associated API key:
+
+```json
+{
+  "schema": "virtual-space-trotting.mpulse-profiles.v1",
+  "profiles": {
+    "dev-alma": {
+      "description": "Development Alma tenant",
+      "script_base_url": "https://collector.example.com/boomerang/",
+      "api_key": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+    }
+  }
+}
+```
+
+To add a profile or change an existing endpoint/key pair, connect over SSH and run:
 
 ```bash
 vst-mpulse registry edit

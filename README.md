@@ -97,11 +97,11 @@ The committed page template already contains this pattern:
   window.BOOMR_API_key = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX";
 </script>
 <script>
-  // Loads https://c.go-mpulse.net/boomerang/XXXXX-XXXXX-XXXXX-XXXXX-XXXXX.
+  // Loads https://rum-dev-alma-dct-collector.soasta.com/boomerang/.
 </script>
 ```
 
-`BOOMERANG_API_KEY` is substituted at build time when present. A non-empty process environment value takes precedence over `.env.local`, so deployment engineers can temporarily target another mPulse backend or tenant with `BOOMERANG_API_KEY=... make remote-update`. Without a key, the committed snippet stays inert and deployments still proceed.
+`BOOMERANG_API_KEY` is substituted at build time when present. The Boomerang script source is currently fixed to the paired `rum-dev-alma-dct-collector.soasta.com` collector. A non-empty process environment value takes precedence over `.env.local`, so deployment engineers can temporarily supply another key with `BOOMERANG_API_KEY=... make remote-update`. Without a key, the committed snippet stays inert and deployments still proceed.
 
 ## Current Status
 

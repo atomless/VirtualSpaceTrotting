@@ -77,7 +77,8 @@ class StaticOutputContractTests(unittest.TestCase):
 
         self.assertIn('window.BOOMR_API_key = "%sveltekit.env.BOOMERANG_API_KEY%"', template)
         self.assertIn("window.BOOMR_config", template)
-        self.assertIn("https://c.go-mpulse.net/boomerang/%sveltekit.env.BOOMERANG_API_KEY%", template)
+        self.assertIn("https://rum-dev-alma-dct-collector.soasta.com/boomerang/", template)
+        self.assertNotIn("https://c.go-mpulse.net/boomerang/", template)
 
     def test_boomerang_env_key_is_public_without_exposing_linode_token(self) -> None:
         config = SVELTE_CONFIG.read_text(encoding="utf-8")

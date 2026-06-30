@@ -130,7 +130,7 @@ Profile switching does not rebuild the site or restart Spin. New page loads read
 
 ## Boomerang Snippet
 
-VirtualSpaceTrotting should use origin-side mPulse tagging because the current launch target is a Linode-hosted Spin site. Place the Boomerang snippet in the document `<head>` after position-sensitive metadata and before the app's main scripts, matching Akamai's placement guidance.
+VirtualSpaceTrotting uses origin-side mPulse tagging because the current launch target is a Linode-hosted Spin site. The committed page template permanently contains Akamai's non-blocking loader in the document `<head>`, after position-sensitive metadata and before the app's main scripts. Profile switching does not edit this HTML or replace the loader.
 
 The committed page template loads a same-origin host configuration before the non-blocking loader:
 
@@ -143,6 +143,8 @@ The committed page template loads a same-origin host configuration before the no
 ```
 
 The page uses Akamai's documented non-blocking loader snippet version 14. Caddy serves the active pair from root-managed host state with `Cache-Control: no-store`. The committed placeholder contains no profile, so a standalone static build remains inert.
+
+When an operator runs `vst-mpulse switch PROFILE`, the privileged helper validates and probes the selected registry entry, then atomically regenerates `/var/opt/virtual-space-trotting/mpulse/public/mpulse-config.js`. Caddy serves that file at `/mpulse-config.js`. On the next page load, the unchanged loader reads the new `scriptBaseUrl` and `apiKey`, composes the paired Boomerang script URL, and loads it. No site rebuild, Spin restart, or Caddy reload is involved; pages that were already open retain the profile they originally loaded.
 
 ### Non-Page-Load Beacons
 

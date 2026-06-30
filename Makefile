@@ -1,4 +1,4 @@
-.PHONY: help setup test test-unit test-site test-runtime test-code-quality test-mpulse-profiles test-mpulse-admin test-mpulse-cli content-corpus preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site
+.PHONY: help setup test test-unit test-site test-runtime test-code-quality test-mpulse-profiles test-mpulse-admin test-mpulse-cli test-mpulse-host content-corpus preview-imagery site-build build-runtime build bundle prepare-linode-host deploy-linode-one-shot remote-use remote-update remote-status remote-logs remote-start remote-stop remote-open-site remote-install-mpulse-admin remote-mpulse-list remote-mpulse-current remote-mpulse-verify
 
 .DEFAULT_GOAL := help
 
@@ -10,6 +10,8 @@ BUNDLE_DIR ?= $(VST_LOCAL_STATE_DIR)/bundles
 PREPARE_LINODE_ARGS ?=
 DEPLOY_LINODE_ARGS ?=
 REMOTE ?=
+MPULSE_REGISTRY_FILE ?=
+MPULSE_PROFILE ?=
 
 help:
 	@printf '%s\n' 'VirtualSpaceTrotting commands:'
@@ -22,6 +24,8 @@ help:
 	@printf '%s\n' '  make deploy-linode-one-shot Create/attach Linode and install the Spin service.'
 	@printf '%s\n' '  make remote-use REMOTE=x   Select a remote receipt.'
 	@printf '%s\n' '  make remote-update         Ship committed HEAD to the selected remote.'
+	@printf '%s\n' '  make remote-install-mpulse-admin MPULSE_REGISTRY_FILE=x MPULSE_PROFILE=x'
+	@printf '%s\n' '  make remote-mpulse-list|remote-mpulse-current|remote-mpulse-verify'
 	@printf '%s\n' '  make remote-status|remote-logs|remote-start|remote-stop|remote-open-site'
 
 setup:
@@ -53,6 +57,9 @@ test-mpulse-admin:
 
 test-mpulse-cli:
 	$(PYTHON) -m unittest scripts.tests.test_vst_mpulse -v
+
+test-mpulse-host:
+	$(PYTHON) -m unittest scripts.tests.test_mpulse_host_setup -v
 
 content-corpus:
 	$(PYTHON) scripts/generate_location_corpus.py
@@ -133,3 +140,30 @@ remote-open-site:
 		--env-file "$(ENV_LOCAL)" \
 		--receipts-dir "$(REMOTE_RECEIPTS_DIR)" \
 		open-site $(if $(REMOTE),--name "$(REMOTE)",)
+
+remote-install-mpulse-admin:
+	@test -n "$(MPULSE_REGISTRY_FILE)" || (printf '%s\n' 'MPULSE_REGISTRY_FILE=<path> is required.' >&2; exit 2)
+	@test -n "$(MPULSE_PROFILE)" || (printf '%s\n' 'MPULSE_PROFILE=<name> is required.' >&2; exit 2)
+	$(PYTHON) scripts/deploy/mpulse_host_setup.py \
+		--env-file "$(ENV_LOCAL)" \
+		--receipts-dir "$(REMOTE_RECEIPTS_DIR)" \
+		$(if $(REMOTE),--name "$(REMOTE)",) \
+		install --registry-file "$(MPULSE_REGISTRY_FILE)" --initial-profile "$(MPULSE_PROFILE)"
+
+remote-mpulse-list:
+	$(PYTHON) scripts/deploy/mpulse_host_setup.py \
+		--env-file "$(ENV_LOCAL)" \
+		--receipts-dir "$(REMOTE_RECEIPTS_DIR)" \
+		$(if $(REMOTE),--name "$(REMOTE)",) list
+
+remote-mpulse-current:
+	$(PYTHON) scripts/deploy/mpulse_host_setup.py \
+		--env-file "$(ENV_LOCAL)" \
+		--receipts-dir "$(REMOTE_RECEIPTS_DIR)" \
+		$(if $(REMOTE),--name "$(REMOTE)",) current
+
+remote-mpulse-verify:
+	$(PYTHON) scripts/deploy/mpulse_host_setup.py \
+		--env-file "$(ENV_LOCAL)" \
+		--receipts-dir "$(REMOTE_RECEIPTS_DIR)" \
+		$(if $(REMOTE),--name "$(REMOTE)",) verify

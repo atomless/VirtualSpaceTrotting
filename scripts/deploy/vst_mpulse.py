@@ -25,7 +25,8 @@ try:
     )
     from scripts.mpulse_profiles import Profile, Registry, RegistryError, parse_registry_text
 except ModuleNotFoundError:
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    installed_lib_dir = Path("/usr/local/lib/virtual-space-trotting")
+    sys.path.insert(0, str(installed_lib_dir if installed_lib_dir.exists() else Path(__file__).resolve().parent))
     from mpulse_profiles import Profile, Registry, RegistryError, parse_registry_text
     from vst_mpulse_admin import (
         DEFAULT_ADMIN_CONFIG_PATH,

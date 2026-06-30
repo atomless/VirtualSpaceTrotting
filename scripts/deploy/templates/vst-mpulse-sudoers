@@ -1,0 +1,3 @@
+%vst-mpulse-operators ALL=(root) NOPASSWD: /usr/local/lib/virtual-space-trotting/vst-mpulse-admin install-registry
+%vst-mpulse-operators ALL=(root) NOPASSWD: /usr/local/lib/virtual-space-trotting/vst-mpulse-admin switch *
+%vst-mpulse-operators ALL=(root) NOPASSWD: /usr/local/lib/virtual-space-trotting/vst-mpulse-admin rollback

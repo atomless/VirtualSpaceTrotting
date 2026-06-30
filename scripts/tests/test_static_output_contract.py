@@ -77,7 +77,16 @@ class StaticOutputContractTests(unittest.TestCase):
 
         self.assertIn('window.BOOMR_API_key = "%sveltekit.env.BOOMERANG_API_KEY%"', template)
         self.assertIn("window.BOOMR_config", template)
-        self.assertIn("https://rum-dev-alma-dct-collector.soasta.com/boomerang/", template)
+        self.assertIn("window.BOOMR.snippetStart", template)
+        self.assertIn("window.BOOMR.snippetExecuted = true", template)
+        self.assertIn("window.BOOMR.snippetVersion = 14", template)
+        self.assertIn(
+            'window.BOOMR.url = "https://rum-dev-alma-dct-collector.soasta.com/boomerang/" + apiKey',
+            template,
+        )
+        self.assertIn("script.src = window.BOOMR.url", template)
+        self.assertIn('link.rel = "preload"', template)
+        self.assertIn("iframeLoader(true)", template)
         self.assertNotIn("https://c.go-mpulse.net/boomerang/", template)
 
     def test_boomerang_env_key_is_public_without_exposing_linode_token(self) -> None:

@@ -97,11 +97,11 @@ The committed page template already contains this pattern:
   window.BOOMR_API_key = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX";
 </script>
 <script>
-  // Loads https://rum-dev-alma-dct-collector.soasta.com/boomerang/.
+  // Loads https://rum-dev-alma-dct-collector.soasta.com/boomerang/XXXXX-XXXXX-XXXXX-XXXXX-XXXXX.
 </script>
 ```
 
-`BOOMERANG_API_KEY` is substituted at build time when present. The Boomerang script source is currently fixed to the paired `rum-dev-alma-dct-collector.soasta.com` collector. A non-empty process environment value takes precedence over `.env.local`, so deployment engineers can temporarily supply another key with `BOOMERANG_API_KEY=... make remote-update`. Without a key, the committed snippet stays inert and deployments still proceed.
+`BOOMERANG_API_KEY` is substituted at build time when present. The page uses Akamai's documented non-blocking loader snippet version 14 and appends the key to the paired `rum-dev-alma-dct-collector.soasta.com/boomerang/` source. A non-empty process environment value takes precedence over `.env.local`, so deployment engineers can temporarily supply another key with `BOOMERANG_API_KEY=... make remote-update`. Without a key, the committed snippet stays inert and deployments still proceed.
 
 ## Current Status
 

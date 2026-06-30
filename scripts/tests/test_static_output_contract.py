@@ -6,6 +6,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 ROOT_LAYOUT = REPO_ROOT / "site" / "src" / "routes" / "+layout.js"
 ROOT_LAYOUT_SVELTE = REPO_ROOT / "site" / "src" / "routes" / "+layout.svelte"
 APP_TEMPLATE = REPO_ROOT / "site" / "src" / "app.html"
+MPULSE_PLACEHOLDER = REPO_ROOT / "site" / "static" / "mpulse-config.js"
 SVELTE_CONFIG = REPO_ROOT / "site" / "svelte.config.js"
 PNPM_WORKSPACE = REPO_ROOT / "site" / "pnpm-workspace.yaml"
 LISTING_PAGE_TEMPLATES = [
@@ -76,15 +77,16 @@ class StaticOutputContractTests(unittest.TestCase):
     def test_boomerang_snippet_is_in_page_template(self) -> None:
         template = APP_TEMPLATE.read_text(encoding="utf-8")
 
-        self.assertIn('window.BOOMR_API_key = "%sveltekit.env.BOOMERANG_API_KEY%"', template)
+        self.assertIn('<script src="/mpulse-config.js"></script>', template)
+        self.assertLess(template.index('/mpulse-config.js'), template.index("window.BOOMR_config"))
+        self.assertIn("window.VST_MPULSE_PROFILE", template)
+        self.assertIn("profile.scriptBaseUrl + profile.apiKey", template)
         self.assertIn("window.BOOMR_config", template)
         self.assertIn("window.BOOMR.snippetStart", template)
         self.assertIn("window.BOOMR.snippetExecuted = true", template)
         self.assertIn("window.BOOMR.snippetVersion = 14", template)
-        self.assertIn(
-            'window.BOOMR.url = "https://rum-dev-alma-dct-collector.soasta.com/boomerang/" + apiKey',
-            template,
-        )
+        self.assertNotIn("%sveltekit.env.BOOMERANG_API_KEY%", template)
+        self.assertNotIn("rum-dev-alma-dct-collector.soasta.com", template)
         self.assertIn("script.src = window.BOOMR.url", template)
         self.assertIn('link.rel = "preload"', template)
         self.assertIn("iframeLoader(true)", template)
@@ -100,10 +102,12 @@ class StaticOutputContractTests(unittest.TestCase):
         self.assertIn("installBoomerangInstrumentation", layout)
         self.assertIn("onMount", layout)
 
-    def test_boomerang_env_key_is_public_without_exposing_linode_token(self) -> None:
+    def test_missing_host_profile_keeps_static_build_inert(self) -> None:
+        placeholder = MPULSE_PLACEHOLDER.read_text(encoding="utf-8")
         config = SVELTE_CONFIG.read_text(encoding="utf-8")
 
-        self.assertIn("publicPrefix: 'BOOMERANG_'", config)
+        self.assertEqual(placeholder, "window.VST_MPULSE_PROFILE = null;\n")
+        self.assertNotIn("publicPrefix", config)
         self.assertNotIn("LINODE_", config)
 
 

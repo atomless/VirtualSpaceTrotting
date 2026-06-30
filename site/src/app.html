@@ -7,7 +7,16 @@
       name="description"
       content="VirtualSpaceTrotting is an atlas of fictional generated satellite-style locations."
     />
+    <script src="/mpulse-config.js"></script>
     <script>
+      var profile = window.VST_MPULSE_PROFILE;
+      var validProfile =
+        profile &&
+        typeof profile.apiKey === "string" &&
+        /^[A-Za-z0-9]{5}(?:-[A-Za-z0-9]{5}){4}$/.test(profile.apiKey) &&
+        typeof profile.scriptBaseUrl === "string" &&
+        /^https:\/\/[^?#]+\/boomerang\/$/.test(profile.scriptBaseUrl);
+
       window.BOOMR_live = 1;
       window.BOOMR_config = {
         Errors: { monitorReporting: true, monitorRejections: true },
@@ -15,7 +24,7 @@
         Continuity: { afterOnload: true, afterOnloadMaxLength: false }
       };
       window.BOOMR = window.BOOMR || {};
-      window.BOOMR_API_key = "%sveltekit.env.BOOMERANG_API_KEY%";
+      window.BOOMR_API_key = validProfile ? profile.apiKey : "";
     </script>
     <script>
       (function captureEarlyBoomerangEvents() {
@@ -80,8 +89,8 @@
     </script>
     <script>
       (function initBoomerang() {
-        var apiKey = "%sveltekit.env.BOOMERANG_API_KEY%";
-        if (!apiKey) return;
+        var profile = window.VST_MPULSE_PROFILE;
+        if (!window.BOOMR_API_key || !profile) return;
 
         if (window.BOOMR && (window.BOOMR.version || window.BOOMR.snippetExecuted)) {
           return;
@@ -91,7 +100,7 @@
         window.BOOMR.snippetStart = new Date().getTime();
         window.BOOMR.snippetExecuted = true;
         window.BOOMR.snippetVersion = 14;
-        window.BOOMR.url = "https://rum-dev-alma-dct-collector.soasta.com/boomerang/" + apiKey;
+        window.BOOMR.url = profile.scriptBaseUrl + profile.apiKey;
 
         var where = document.currentScript || document.getElementsByTagName("script")[0];
         var parentNode = where.parentNode;

@@ -5,7 +5,6 @@ import tarfile
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -104,12 +103,12 @@ class BuildReleaseBundleTests(unittest.TestCase):
         with tarfile.open(archive_output, "r:gz") as archive:
             self.assertIn("dist/site/index.html", archive.getnames())
 
-    def test_build_target_receives_boomerang_api_key_from_env_file_without_archiving_env(self) -> None:
+    def test_build_target_does_not_receive_boomerang_api_key_from_env_file(self) -> None:
         repo_root = self.create_git_repo()
         (repo_root / "Makefile").write_text(
             "build:\n"
             "\t@mkdir -p dist/site\n"
-            "\t@printf '%s\\n' \"$$BOOMERANG_API_KEY\" > dist/site/boomerang-key.txt\n",
+            "\t@printf '%s\\n' \"$${BOOMERANG_API_KEY-unset}\" > dist/site/boomerang-key.txt\n",
             encoding="utf-8",
         )
         subprocess.run(["git", "add", "Makefile"], cwd=repo_root, check=True)
@@ -125,20 +124,20 @@ class BuildReleaseBundleTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
         metadata = json.loads(metadata_output.read_text(encoding="utf-8"))
-        self.assertIs(metadata["boomerang_api_key_present"], True)
+        self.assertNotIn("boomerang_api_key_present", metadata)
         with tarfile.open(archive_output, "r:gz") as archive:
             names = archive.getnames()
             self.assertNotIn(".env.local", names)
             key_file = archive.extractfile("dist/site/boomerang-key.txt")
             assert key_file is not None
-            self.assertEqual(key_file.read().decode("utf-8").strip(), "ABCDE-FGHIJ-KLMNO-PQRST-UVWXY")
+            self.assertEqual(key_file.read().decode("utf-8").strip(), "unset")
 
-    def test_process_env_boomerang_api_key_overrides_env_file(self) -> None:
+    def test_build_target_strips_process_env_boomerang_api_key(self) -> None:
         repo_root = self.create_git_repo()
         (repo_root / "Makefile").write_text(
             "build:\n"
             "\t@mkdir -p dist/site\n"
-            "\t@printf '%s\\n' \"$$BOOMERANG_API_KEY\" > dist/site/boomerang-key.txt\n",
+            "\t@printf '%s\\n' \"$${BOOMERANG_API_KEY-unset}\" > dist/site/boomerang-key.txt\n",
             encoding="utf-8",
         )
         subprocess.run(["git", "add", "Makefile"], cwd=repo_root, check=True)
@@ -150,14 +149,30 @@ class BuildReleaseBundleTests(unittest.TestCase):
         archive_output = repo_root / "release.tar.gz"
         metadata_output = repo_root / "release.json"
 
-        with patch.dict(os.environ, {"BOOMERANG_API_KEY": "PROCESS-ENV-KEY"}):
-            result = run_bundle(repo_root, archive_output, metadata_output)
+        env = {**os.environ, "BOOMERANG_API_KEY": "PROCESS-ENV-KEY"}
+        result = subprocess.run(
+            [
+                "python3",
+                str(SCRIPT),
+                "--repo-root",
+                str(repo_root),
+                "--archive-output",
+                str(archive_output),
+                "--metadata-output",
+                str(metadata_output),
+            ],
+            cwd=str(REPO_ROOT),
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
 
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
         with tarfile.open(archive_output, "r:gz") as archive:
             key_file = archive.extractfile("dist/site/boomerang-key.txt")
             assert key_file is not None
-            self.assertEqual(key_file.read().decode("utf-8").strip(), "PROCESS-ENV-KEY")
+            self.assertEqual(key_file.read().decode("utf-8").strip(), "unset")
 
 
 if __name__ == "__main__":

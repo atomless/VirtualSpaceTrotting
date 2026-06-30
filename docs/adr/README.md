@@ -2,6 +2,10 @@
 
 Use ADRs to capture significant architectural or cross-cutting decisions.
 
+## Records
+
+- [ADR 0001: Host-Managed mPulse Profiles](0001-host-managed-mpulse-profiles.md)
+
 ## When An ADR Is Required
 
 Create an ADR when a change:

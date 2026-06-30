@@ -101,22 +101,26 @@ The intended setup path is deliberately small:
 
 Release bundles are built from committed `HEAD`. Commit and push the work you want deployed before asking the agent to deploy or update the remote.
 
-## Team mPulse Operations
+## Switch mPulse Profiles
 
-Each engineer should use an individual limited Linux account with their own SSH key and membership of `vst-mpulse-operators`. The current shared `vst` account works, but its audit entries can identify only that shared account.
-
-After connecting to the Linode, the normal workflow is:
+Connect to the Linode over SSH, list the defined profiles, and switch to the required one:
 
 ```bash
 vst-mpulse list
 vst-mpulse current
-vst-mpulse verify
-vst-mpulse history
 vst-mpulse switch PROFILE
-vst-mpulse rollback
+vst-mpulse current
+vst-mpulse verify
 ```
 
-`vst-mpulse registry edit` opens a user-owned temporary copy in `$VISUAL` or `$EDITOR`. It validates the complete registry and probes changed endpoint/key pairs before the privileged helper atomically installs it. Root never runs the editor. Previous registries are retained in a bounded backup rotation under `/var/opt/virtual-space-trotting/mpulse/state/registry-backups/`.
+`switch` accepts only a name already defined in the host registry. It validates and probes the paired endpoint and API key, atomically updates `/mpulse-config.js`, and verifies the public result. It does not rebuild the site or restart Spin. New page loads use the selected profile; pages already open retain the profile they originally loaded.
+
+If an operator selects the wrong valid profile, restore the previous one and inspect the sanitized change history:
+
+```bash
+vst-mpulse rollback
+vst-mpulse history
+```
 
 Read-only checks can also be run from a configured engineering checkout:
 
@@ -126,7 +130,21 @@ make remote-mpulse-current
 make remote-mpulse-verify
 ```
 
-Profile switching does not rebuild the site or restart Spin. New page loads read the selected pair from `/mpulse-config.js`; already loaded pages keep the profile they loaded. If activation verification fails, the helper restores the prior profile automatically. For operator error after a successful switch, run `vst-mpulse rollback`.
+If activation or public verification fails, the helper automatically restores the previously active profile.
+
+### Add or Edit Profiles
+
+The authoritative profile registry lives on the Linode. To add a profile or change an existing endpoint/key pair, connect over SSH and run:
+
+```bash
+vst-mpulse registry edit
+```
+
+The command opens a user-owned temporary copy in `$VISUAL` or `$EDITOR`. When the editor closes, it validates the complete registry and probes every changed endpoint/key pair before the privileged helper atomically installs it. Root never runs the editor. Registry changes do not alter the active profile, so run `vst-mpulse switch PROFILE` afterwards when the new or edited profile should become active.
+
+Previous registries are retained in a bounded backup rotation under `/var/opt/virtual-space-trotting/mpulse/state/registry-backups/`. The real registry must remain on the host or in gitignored local state; never commit it to this public repository.
+
+Engineers should use individual limited Linux accounts with their own SSH keys and membership of `vst-mpulse-operators`. The shared `vst` account works, but its history entries can identify only that shared account.
 
 ## Boomerang Snippet
 
